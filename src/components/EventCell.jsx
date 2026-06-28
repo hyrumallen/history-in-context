@@ -10,15 +10,18 @@ export default function EventCell({ event }) {
   const color = TYPE_COLORS[event.type] ?? TYPE_COLORS.other
 
   const inner = (
-    <div style={{
-      display: 'flex',
-      alignItems: 'flex-start',
-      gap: '5px',
-      padding: '2px 6px',
-      fontSize: '11.5px',
-      lineHeight: '1.4',
-      color: '#1a1a1a',
-    }}>
+    <div
+      title={event.description}
+      style={{
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '5px',
+        padding: '2px 6px',
+        fontSize: '11.5px',
+        lineHeight: '1.4',
+        color: '#1a1a1a',
+      }}
+    >
       <span style={{
         width: '7px',
         height: '7px',
@@ -32,6 +35,9 @@ export default function EventCell({ event }) {
           {event.year}
         </span>
         {event.title}
+        {event.link && (
+          <span style={{ color: '#aaa', fontSize: '10px', marginLeft: '3px' }}>↗</span>
+        )}
       </span>
     </div>
   )
