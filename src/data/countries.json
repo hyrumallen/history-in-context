@@ -1,0 +1,8 @@
+[
+  { "id": "england", "name": "England", "color": "#c8d8e8" },
+  { "id": "france", "name": "France", "color": "#c8e8d0" },
+  { "id": "spain", "name": "Spain", "color": "#e8d8c8" },
+  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "color": "#e8e8c8" },
+  { "id": "russia", "name": "Russia", "color": "#e8c8c8" },
+  { "id": "ottoman-empire", "name": "Ottoman Empire", "color": "#e0c8e8" }
+]
