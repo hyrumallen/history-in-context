@@ -1,10 +1,11 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import TimelineGrid from './components/TimelineGrid'
 import Legend from './components/Legend'
 import WorldMap from './components/WorldMap'
 
 function App() {
   const [currentYear, setCurrentYear] = useState(1500)
+  const highlightTimerRef = useRef(null)
 
   const handleYearChange = useCallback((year) => {
     setCurrentYear(year)
@@ -15,7 +16,8 @@ function App() {
     if (!el) return
     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
     el.classList.add('event-highlight')
-    setTimeout(() => el.classList.remove('event-highlight'), 1500)
+    clearTimeout(highlightTimerRef.current)
+    highlightTimerRef.current = setTimeout(() => el.classList.remove('event-highlight'), 1500)
   }, [])
 
   return (
