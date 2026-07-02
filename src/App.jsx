@@ -5,7 +5,7 @@ import WorldMap from './components/WorldMap'
 
 function App() {
   const [currentYear, setCurrentYear] = useState(1500)
-  const highlightTimerRef = useRef(null)
+  const highlightElRef = useRef(null)
 
   const handleYearChange = useCallback((year) => {
     setCurrentYear(year)
@@ -15,9 +15,17 @@ function App() {
     const el = document.querySelector(`[data-event-id="${eventId}"]`)
     if (!el) return
     el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    if (highlightElRef.current && highlightElRef.current !== el) {
+      highlightElRef.current.classList.remove('event-highlight')
+    }
+    highlightElRef.current = el
+    el.classList.remove('event-highlight')
+    void el.offsetWidth
     el.classList.add('event-highlight')
-    clearTimeout(highlightTimerRef.current)
-    highlightTimerRef.current = setTimeout(() => el.classList.remove('event-highlight'), 1500)
+    el.addEventListener('animationend', () => {
+      el.classList.remove('event-highlight')
+      if (highlightElRef.current === el) highlightElRef.current = null
+    }, { once: true })
   }, [])
 
   return (

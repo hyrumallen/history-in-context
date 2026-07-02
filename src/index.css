@@ -19,7 +19,11 @@ a.event-link:hover {
   border-radius: 3px;
 }
 
+@keyframes yellowFlash {
+  0%   { background: rgba(255, 220, 0, 0.4); }
+  100% { background: transparent; }
+}
+
 .event-highlight {
-  background: rgba(255, 220, 0, 0.4) !important;
-  transition: background 1.5s ease-out;
+  animation: yellowFlash 1.5s ease-out forwards;
 }

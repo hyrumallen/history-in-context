@@ -66,6 +66,10 @@ export default function useMapTransform() {
     dragRef.current = null
   }, [])
 
+  const onMouseLeave = useCallback(() => {
+    dragRef.current = null
+  }, [])
+
   const onDoubleClick = useCallback(() => {
     dragRef.current = null
     apply({ scale: 1, translateX: 0, translateY: 0 })
@@ -73,6 +77,6 @@ export default function useMapTransform() {
 
   return {
     transform,
-    handlers: { onWheel, onMouseDown, onMouseMove, onMouseUp, onDoubleClick },
+    handlers: { onWheel, onMouseDown, onMouseMove, onMouseUp, onMouseLeave, onDoubleClick },
   }
 }
