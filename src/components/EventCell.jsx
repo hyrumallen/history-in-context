@@ -1,4 +1,4 @@
-const TYPE_COLORS = {
+export const TYPE_COLORS = {
   monarch: '#c9a227',
   war: '#c0392b',
   birth: '#2980b9',
