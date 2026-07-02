@@ -18,3 +18,8 @@ a.event-link:hover {
   background: rgba(0, 0, 0, 0.06);
   border-radius: 3px;
 }
+
+.event-highlight {
+  background: rgba(255, 220, 0, 0.4) !important;
+  transition: background 1.5s ease-out;
+}

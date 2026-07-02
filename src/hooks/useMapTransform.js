@@ -3,6 +3,20 @@ import { useState, useCallback, useRef } from 'react'
 const MIN_SCALE = 1
 const MAX_SCALE = 12
 
+function clampT(t) {
+  if (t.scale <= 1.001) return { scale: Math.max(1, t.scale), translateX: 0, translateY: 0 }
+  const margin = 80
+  const maxX = margin
+  const minX = -800 * (t.scale - 1) - margin
+  const maxY = margin
+  const minY = -400 * (t.scale - 1) - margin
+  return {
+    scale: t.scale,
+    translateX: Math.min(maxX, Math.max(minX, t.translateX)),
+    translateY: Math.min(maxY, Math.max(minY, t.translateY)),
+  }
+}
+
 export default function useMapTransform() {
   const [transform, setTransform] = useState({ scale: 1, translateX: 0, translateY: 0 })
   const transformRef = useRef({ scale: 1, translateX: 0, translateY: 0 })
@@ -22,11 +36,11 @@ export default function useMapTransform() {
     const factor = e.deltaY > 0 ? 0.85 : 1.18
     const newScale = Math.min(MAX_SCALE, Math.max(MIN_SCALE, prev.scale * factor))
     const ratio = newScale / prev.scale
-    apply({
+    apply(clampT({
       scale: newScale,
       translateX: mx - ratio * (mx - prev.translateX),
       translateY: my - ratio * (my - prev.translateY),
-    })
+    }))
   }, [apply])
 
   const onMouseDown = useCallback((e) => {
@@ -41,11 +55,11 @@ export default function useMapTransform() {
   const onMouseMove = useCallback((e) => {
     if (!dragRef.current) return
     const { startX, startY, base } = dragRef.current
-    apply({
+    apply(clampT({
       scale: base.scale,
       translateX: base.translateX + (e.clientX - startX),
       translateY: base.translateY + (e.clientY - startY),
-    })
+    }))
   }, [apply])
 
   const onMouseUp = useCallback(() => {

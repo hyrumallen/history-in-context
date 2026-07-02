@@ -1,5 +1,6 @@
 import worldOutline from '../data/world-outline.json'
 import TerritoryLayer from './TerritoryLayer'
+import EventPinLayer from './EventPinLayer'
 import useMapTransform from '../hooks/useMapTransform'
 
 const W = 800
@@ -36,6 +37,7 @@ export default function WorldMap({ currentYear, onPinClick }) {
             )}
           </g>
           <TerritoryLayer currentYear={currentYear} width={W} height={H} />
+          <EventPinLayer currentYear={currentYear} onPinClick={onPinClick} />
         </g>
       </svg>
 

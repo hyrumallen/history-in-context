@@ -161,7 +161,9 @@ export default function TimelineGrid({ onYearChange }) {
                   }}
                 >
                   {cellEvents.map(event => (
-                    <EventCell key={event.id} event={event} />
+                    <div key={event.id} data-event-id={event.id}>
+                      <EventCell event={event} />
+                    </div>
                   ))}
                 </div>
               )

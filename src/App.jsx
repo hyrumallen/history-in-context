@@ -10,6 +10,14 @@ function App() {
     setCurrentYear(year)
   }, [])
 
+  const handlePinClick = useCallback((eventId) => {
+    const el = document.querySelector(`[data-event-id="${eventId}"]`)
+    if (!el) return
+    el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    el.classList.add('event-highlight')
+    setTimeout(() => el.classList.remove('event-highlight'), 1500)
+  }, [])
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
       <header style={{
@@ -36,7 +44,7 @@ function App() {
         <TimelineGrid onYearChange={handleYearChange} />
       </div>
       <div style={{ flex: 1, overflow: 'hidden', borderTop: '2px solid #c8c8c8' }}>
-        <WorldMap currentYear={currentYear} />
+        <WorldMap currentYear={currentYear} onPinClick={handlePinClick} />
       </div>
     </div>
   )
