@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react'
 import TimelineGrid from './components/TimelineGrid'
 import Legend from './components/Legend'
+import WorldMap from './components/WorldMap'
 
 function App() {
   const [currentYear, setCurrentYear] = useState(1500)
@@ -34,8 +35,8 @@ function App() {
       <div style={{ flex: '0 0 55vh', overflow: 'hidden' }}>
         <TimelineGrid onYearChange={handleYearChange} />
       </div>
-      <div style={{ flex: 1, overflow: 'hidden', borderTop: '2px solid #c8c8c8', background: '#b8d4e8', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <span style={{ color: '#666', fontSize: '13px' }}>Map — {currentYear}</span>
+      <div style={{ flex: 1, overflow: 'hidden', borderTop: '2px solid #c8c8c8' }}>
+        <WorldMap currentYear={currentYear} />
       </div>
     </div>
   )
