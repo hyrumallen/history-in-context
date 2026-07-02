@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react'
 import countries from '../data/countries.json'
 import events from '../data/events.json'
 import monarchs from '../data/monarchs.json'
@@ -60,9 +61,30 @@ function getMonarchBg(year, country) {
   return 'white'
 }
 
-export default function TimelineGrid() {
+export default function TimelineGrid({ onYearChange }) {
+  const scrollRef = useRef(null)
+
+  useEffect(() => {
+    const el = scrollRef.current
+    if (!el || !onYearChange) return
+    let timer = null
+    const handleScroll = () => {
+      if (timer) return
+      timer = setTimeout(() => {
+        timer = null
+        const year = Math.min(1700, Math.max(1500, Math.round(el.scrollTop / parseInt(ROW_HEIGHT)) + START_YEAR))
+        onYearChange(year)
+      }, 50)
+    }
+    el.addEventListener('scroll', handleScroll, { passive: true })
+    return () => {
+      el.removeEventListener('scroll', handleScroll)
+      if (timer) clearTimeout(timer)
+    }
+  }, [onYearChange])
+
   return (
-    <div style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div style={{
         display: 'grid',
         gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${countries.length}, ${COUNTRY_COL_WIDTH})`,
