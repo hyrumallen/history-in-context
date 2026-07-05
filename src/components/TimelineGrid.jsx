@@ -1,5 +1,4 @@
 import { useRef, useEffect } from 'react'
-import countries from '../data/countries.json'
 import events from '../data/events.json'
 import monarchs from '../data/monarchs.json'
 import CountryHeader from './CountryHeader'
@@ -61,7 +60,7 @@ function getMonarchBg(year, country) {
   return 'white'
 }
 
-export default function TimelineGrid({ onYearChange }) {
+export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar }) {
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -83,11 +82,44 @@ export default function TimelineGrid({ onYearChange }) {
     }
   }, [onYearChange])
 
+  if (selectedCountries.length === 0) {
+    return (
+      <div style={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 14,
+        color: '#666',
+        fontSize: 14,
+      }}>
+        <div>No countries selected</div>
+        <button
+          onClick={onOpenSidebar}
+          style={{
+            font: 'inherit',
+            fontSize: '13px',
+            fontWeight: 600,
+            padding: '7px 16px',
+            cursor: 'pointer',
+            background: '#4a6fa5',
+            color: 'white',
+            border: 'none',
+            borderRadius: 5,
+          }}
+        >
+          Open the Countries panel
+        </button>
+      </div>
+    )
+  }
+
   return (
     <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%' }}>
       <div style={{
         display: 'grid',
-        gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${countries.length}, ${COUNTRY_COL_WIDTH})`,
+        gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${selectedCountries.length}, ${COUNTRY_COL_WIDTH})`,
         gridAutoRows: `minmax(${ROW_HEIGHT}, auto)`,
         minWidth: 'fit-content',
       }}>
@@ -105,7 +137,7 @@ export default function TimelineGrid({ onYearChange }) {
         }} />
 
         {/* Country header cells — sticky must be on the direct grid item */}
-        {countries.map(country => (
+        {selectedCountries.map(country => (
           <div key={country.id} style={{
             position: 'sticky',
             top: 0,
@@ -146,7 +178,7 @@ export default function TimelineGrid({ onYearChange }) {
             </div>
 
             {/* Country cells */}
-            {countries.map(country => {
+            {selectedCountries.map(country => {
               const cellEvents = eventMap[`${year}-${country.id}`] || []
               const monarch = getReigningMonarch(year, country)
               const tooltip = monarch ? `${monarch.name} (${monarch.startYear}–${monarch.endYear})` : ''

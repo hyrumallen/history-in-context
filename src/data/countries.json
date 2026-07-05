@@ -1,8 +1,20 @@
 [
-  { "id": "england", "name": "England", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690" },
-  { "id": "france", "name": "France", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b" },
-  { "id": "spain", "name": "Spain", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
-  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
-  { "id": "russia", "name": "Russia", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
-  { "id": "ottoman-empire", "name": "Ottoman Empire", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" }
+  { "id": "england", "name": "England", "continent": "Europe", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690" },
+  { "id": "france", "name": "France", "continent": "Europe", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b" },
+  { "id": "spain", "name": "Spain", "continent": "Europe", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
+  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "continent": "Europe", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
+  { "id": "russia", "name": "Russia", "continent": "Europe", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
+  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" },
+  { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f" },
+  { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f" },
+  { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199" },
+  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c" },
+  { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47" },
+  { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261" },
+  { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40" },
+  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c" },
+  { "id": "songhai", "name": "Songhai Empire", "continent": "Africa", "color": "#e6d5bd", "mapColor": "#a1743f", "mapStroke": "#7d5a30" },
+  { "id": "ethiopia", "name": "Ethiopia", "continent": "Africa", "color": "#dde3c8", "mapColor": "#8a9a5b", "mapStroke": "#6b7845" },
+  { "id": "aztec", "name": "Aztec Empire", "continent": "Americas", "color": "#dcd2e8", "mapColor": "#8b7bb5", "mapStroke": "#6c5f91" },
+  { "id": "inca", "name": "Inca Empire", "continent": "Americas", "color": "#e2cfdc", "mapColor": "#8f5f7f", "mapStroke": "#714a64" }
 ]

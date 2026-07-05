@@ -17,7 +17,7 @@ function featureRings(feature) {
   return []
 }
 
-export default function WorldMap({ currentYear, onPinClick, mode = 'full' }) {
+export default function WorldMap({ currentYear, onPinClick, mode = 'full', selectedIds }) {
   const { transform, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
   const isMini = mode === 'mini'
@@ -43,8 +43,8 @@ export default function WorldMap({ currentYear, onPinClick, mode = 'full' }) {
               ))
             )}
           </g>
-          <TerritoryLayer currentYear={currentYear} width={W} height={H} />
-          <EventPinLayer currentYear={currentYear} onPinClick={onPinClick} />
+          <TerritoryLayer currentYear={currentYear} width={W} height={H} selectedIds={selectedIds} />
+          <EventPinLayer currentYear={currentYear} onPinClick={onPinClick} selectedIds={selectedIds} />
         </g>
       </svg>
 

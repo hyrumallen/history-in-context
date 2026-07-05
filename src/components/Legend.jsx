@@ -10,12 +10,11 @@ export default function Legend() {
   return (
     <div style={{
       display: 'flex',
-      alignItems: 'center',
-      gap: '16px',
-      flexWrap: 'wrap',
+      flexDirection: 'column',
+      gap: '3px',
     }}>
       {ITEMS.map(item => (
-        <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+        <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
           <span style={{
             width: '9px',
             height: '9px',
@@ -24,7 +23,7 @@ export default function Legend() {
             flexShrink: 0,
             display: 'inline-block',
           }} />
-          <span style={{ fontSize: '12px', color: '#bbb', whiteSpace: 'nowrap' }}>
+          <span style={{ fontSize: '12px', color: '#555', whiteSpace: 'nowrap' }}>
             {item.label}
           </span>
         </div>
