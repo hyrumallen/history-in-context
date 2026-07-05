@@ -8,5 +8,9 @@
   { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f" },
   { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f" },
   { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199" },
-  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c" }
+  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c" },
+  { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47" },
+  { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261" },
+  { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40" },
+  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c" }
 ]
