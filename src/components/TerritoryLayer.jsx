@@ -20,14 +20,16 @@ function toPoints(coords, width, height) {
     .join(' ')
 }
 
-export default function TerritoryLayer({ currentYear, width, height }) {
+export default function TerritoryLayer({ currentYear, width, height, selectedIds }) {
   const snapshotYear = nearestSnapshot(currentYear)
   const snapshot = territories.find(s => s.year === snapshotYear)
   if (!snapshot) return null
 
   return (
     <g>
-      {snapshot.territories.map(territory =>
+      {snapshot.territories
+        .filter(territory => selectedIds.has(territory.countryId))
+        .map(territory =>
         territory.polygons.map(polygon => (
           <polygon
             key={`${territory.countryId}-${polygon.name}`}

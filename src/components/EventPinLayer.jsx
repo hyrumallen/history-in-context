@@ -8,8 +8,8 @@ function project(lng, lat) {
   return [(lng + 180) * (W / 360), (90 - lat) * (H / 180)]
 }
 
-export default function EventPinLayer({ currentYear, onPinClick }) {
-  const pins = events.filter(e => e.year === currentYear && e.lat != null)
+export default function EventPinLayer({ currentYear, onPinClick, selectedIds }) {
+  const pins = events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
 
   return (
     <g>

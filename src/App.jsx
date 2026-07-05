@@ -75,6 +75,8 @@ function App() {
     [selectedIds]
   )
 
+  const selectedIdSet = useMemo(() => new Set(selectedIds), [selectedIds])
+
   const handleYearChange = useCallback((year) => {
     setCurrentYear(year)
   }, [])
@@ -170,6 +172,7 @@ function App() {
               mode={isMini ? 'mini' : 'full'}
               currentYear={currentYear}
               onPinClick={handlePinClick}
+              selectedIds={selectedIdSet}
             />
           </div>
         </div>
