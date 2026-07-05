@@ -1,8 +1,8 @@
 [
-  { "id": "england", "name": "England", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690" },
-  { "id": "france", "name": "France", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b" },
-  { "id": "spain", "name": "Spain", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
-  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
-  { "id": "russia", "name": "Russia", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
-  { "id": "ottoman-empire", "name": "Ottoman Empire", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" }
+  { "id": "england", "name": "England", "continent": "Europe", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690" },
+  { "id": "france", "name": "France", "continent": "Europe", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b" },
+  { "id": "spain", "name": "Spain", "continent": "Europe", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
+  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "continent": "Europe", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
+  { "id": "russia", "name": "Russia", "continent": "Europe", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
+  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" }
 ]
