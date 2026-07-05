@@ -2,7 +2,8 @@ import territories from '../data/territories.json'
 import countries from '../data/countries.json'
 
 const SNAPSHOT_YEARS = territories.map(s => s.year)
-const colorMap = Object.fromEntries(countries.map(c => [c.id, c.color]))
+const colorMap = Object.fromEntries(countries.map(c => [c.id, c.mapColor]))
+const strokeMap = Object.fromEntries(countries.map(c => [c.id, c.mapStroke]))
 
 function nearestSnapshot(year) {
   return SNAPSHOT_YEARS.reduce((best, s) =>
@@ -32,8 +33,8 @@ export default function TerritoryLayer({ currentYear, width, height }) {
             key={`${territory.countryId}-${polygon.name}`}
             points={toPoints(polygon.coords, width, height)}
             fill={colorMap[territory.countryId] ?? '#ccc'}
-            fillOpacity={0.6}
-            stroke={colorMap[territory.countryId] ?? '#ccc'}
+            fillOpacity={0.75}
+            stroke={strokeMap[territory.countryId] ?? '#999'}
             strokeWidth={0.5}
             strokeOpacity={0.9}
           />
