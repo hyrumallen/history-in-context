@@ -44,7 +44,7 @@ Two kinds of work in one feature:
 - `monarchs.json`, `events.json`, `territories.json`: new-country entries, existing schemas unchanged. Event ids continue the `eNNN` sequence.
 
 **Components:**
-- **New `CountrySidebar.jsx`** — props `{ countries, selectedIds, onChange, open, onClose }`; groups by continent; continent checkbox with indeterminate state; Legend strip at top.
+- **New `CountrySidebar.jsx`** — props `{ countries, selectedIds, onChange, open }`; groups by continent; continent checkbox with indeterminate state; Legend strip at top. (The header Countries button owns open/close.)
 - **`TimelineGrid.jsx`** — new prop `selectedCountries` (array of country objects, ordered as in countries.json); renders only those columns; empty-state message + "open panel" button (via new `onOpenSidebar` prop) when empty.
 - **`TerritoryLayer.jsx` / `EventPinLayer.jsx`** — new prop `selectedIds` (Set); skip non-selected countries.
 - **`WorldMap.jsx`** — accepts and forwards `selectedIds`.
