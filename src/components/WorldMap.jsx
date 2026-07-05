@@ -17,18 +17,25 @@ function featureRings(feature) {
   return []
 }
 
-export default function WorldMap({ currentYear, onPinClick }) {
+export default function WorldMap({ currentYear, onPinClick, mode = 'full' }) {
   const { transform, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
+  const isMini = mode === 'mini'
 
   return (
     <div style={{ width: '100%', height: '100%', overflow: 'hidden', position: 'relative', background: '#b8d4e8' }}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
-        style={{ width: '100%', height: '100%', display: 'block', cursor: scale > 1 ? 'grab' : 'default' }}
-        {...handlers}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: 'block',
+          cursor: !isMini && scale > 1 ? 'grab' : 'default',
+          pointerEvents: isMini ? 'none' : 'auto',
+        }}
+        {...(isMini ? {} : handlers)}
       >
-        <g transform={`translate(${translateX},${translateY}) scale(${scale})`}>
+        <g transform={isMini ? undefined : `translate(${translateX},${translateY}) scale(${scale})`}>
           <g fill="#e0e0e0" stroke="#c0c0c0" strokeWidth={0.3}>
             {worldOutline.features.map((f, i) =>
               featureRings(f).map((ring, j) => (
@@ -58,17 +65,19 @@ export default function WorldMap({ currentYear, onPinClick }) {
         {currentYear}
       </div>
 
-      <div style={{
-        position: 'absolute',
-        bottom: 12,
-        right: 16,
-        color: 'rgba(255,255,255,0.5)',
-        fontSize: 11,
-        pointerEvents: 'none',
-        fontFamily: 'inherit',
-      }}>
-        Scroll to zoom · drag to pan · double-click to reset
-      </div>
+      {!isMini && (
+        <div style={{
+          position: 'absolute',
+          bottom: 12,
+          right: 16,
+          color: 'rgba(255,255,255,0.5)',
+          fontSize: 11,
+          pointerEvents: 'none',
+          fontFamily: 'inherit',
+        }}>
+          Scroll to zoom · drag to pan · double-click to reset
+        </div>
+      )}
     </div>
   )
 }
