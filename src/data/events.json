@@ -3144,5 +3144,159 @@
     "link": "https://en.wikipedia.org/wiki/Gondar",
     "lat": 12.6,
     "lng": 37.47
+  },
+  {
+    "id": "e287",
+    "year": 1502,
+    "countryId": "aztec",
+    "type": "monarch",
+    "title": "Moctezuma II crowned",
+    "description": "Moctezuma II became huey tlatoani of the Aztec Empire at the height of its power, ruling millions from island Tenochtitlan.",
+    "link": "https://en.wikipedia.org/wiki/Moctezuma_II",
+    "lat": 19.43,
+    "lng": -99.13
+  },
+  {
+    "id": "e288",
+    "year": 1507,
+    "countryId": "aztec",
+    "type": "other",
+    "title": "The last New Fire ceremony",
+    "description": "The Aztecs celebrated the binding of the years — the great calendar renewal held once every 52 years — for what proved to be the final time.",
+    "link": "https://en.wikipedia.org/wiki/New_Fire_ceremony",
+    "lat": 19.42,
+    "lng": -99.12
+  },
+  {
+    "id": "e289",
+    "year": 1519,
+    "countryId": "aztec",
+    "type": "exploration",
+    "title": "Cortés enters Tenochtitlan",
+    "description": "Hernán Cortés marched into the Aztec capital and was received by Moctezuma; within months the emperor was a hostage in his own palace.",
+    "link": "https://en.wikipedia.org/wiki/Hern%C3%A1n_Cort%C3%A9s",
+    "lat": 19.43,
+    "lng": -99.14
+  },
+  {
+    "id": "e290",
+    "year": 1520,
+    "countryId": "aztec",
+    "type": "war",
+    "title": "La Noche Triste",
+    "description": "The Aztecs rose and drove the Spanish from Tenochtitlan with heavy losses — a victory that bought the empire one more year.",
+    "link": "https://en.wikipedia.org/wiki/La_Noche_Triste",
+    "lat": 19.44,
+    "lng": -99.15
+  },
+  {
+    "id": "e291",
+    "year": 1520,
+    "countryId": "aztec",
+    "type": "death",
+    "title": "Smallpox devastates Tenochtitlan",
+    "description": "Smallpox brought by the Europeans swept the Valley of Mexico, killing Emperor Cuitláhuac and untold thousands before the final siege.",
+    "link": "https://en.wikipedia.org/wiki/Cuitl%C3%A1huac",
+    "lat": 19.42,
+    "lng": -99.13
+  },
+  {
+    "id": "e292",
+    "year": 1521,
+    "countryId": "aztec",
+    "type": "war",
+    "title": "Fall of Tenochtitlan",
+    "description": "After a 93-day siege, Cuauhtémoc surrendered the ruined capital to Cortés — the end of the Aztec Empire and the birth of New Spain.",
+    "link": "https://en.wikipedia.org/wiki/Fall_of_Tenochtitlan",
+    "lat": 19.43,
+    "lng": -99.12
+  },
+  {
+    "id": "e293",
+    "year": 1525,
+    "countryId": "aztec",
+    "type": "death",
+    "title": "Execution of Cuauhtémoc",
+    "description": "Cortés had the last Aztec emperor hanged during an expedition to Honduras, extinguishing the imperial line.",
+    "link": "https://en.wikipedia.org/wiki/Cuauht%C3%A9moc",
+    "lat": 17.9,
+    "lng": -90.9
+  },
+  {
+    "id": "e294",
+    "year": 1500,
+    "countryId": "inca",
+    "type": "other",
+    "title": "Huayna Capac expands the empire",
+    "description": "Huayna Capac pushed the Inca realm to its greatest extent, from modern Colombia to Chile, ruling from Cusco and Quito.",
+    "link": "https://en.wikipedia.org/wiki/Huayna_Capac",
+    "lat": -0.22,
+    "lng": -78.51
+  },
+  {
+    "id": "e295",
+    "year": 1527,
+    "countryId": "inca",
+    "type": "death",
+    "title": "Death of Huayna Capac",
+    "description": "The emperor and his chosen heir died of a European epidemic that raced ahead of the conquistadors — setting off a catastrophic succession crisis.",
+    "link": "https://en.wikipedia.org/wiki/Huayna_Capac",
+    "lat": -0.23,
+    "lng": -78.5
+  },
+  {
+    "id": "e296",
+    "year": 1529,
+    "countryId": "inca",
+    "type": "war",
+    "title": "Civil war: Huáscar against Atahualpa",
+    "description": "The half-brothers fought a ruinous war for the throne; Atahualpa's victory came just as Pizarro's small band arrived on the coast.",
+    "link": "https://en.wikipedia.org/wiki/Inca_Civil_War",
+    "lat": -13.53,
+    "lng": -71.97
+  },
+  {
+    "id": "e297",
+    "year": 1532,
+    "countryId": "inca",
+    "type": "war",
+    "title": "Cajamarca — Atahualpa captured",
+    "description": "Francisco Pizarro ambushed and seized Atahualpa at Cajamarca; the emperor's ransom filled a room with gold, but did not save him.",
+    "link": "https://en.wikipedia.org/wiki/Battle_of_Cajamarca",
+    "lat": -7.16,
+    "lng": -78.51
+  },
+  {
+    "id": "e298",
+    "year": 1533,
+    "countryId": "inca",
+    "type": "death",
+    "title": "Execution of Atahualpa",
+    "description": "The Spanish garroted the last independent Inca emperor despite his paid ransom, then marched on Cusco.",
+    "link": "https://en.wikipedia.org/wiki/Atahualpa",
+    "lat": -7.15,
+    "lng": -78.52
+  },
+  {
+    "id": "e299",
+    "year": 1533,
+    "countryId": "inca",
+    "type": "war",
+    "title": "Fall of Cusco",
+    "description": "Pizarro's men entered the Inca capital, stripping its temples of gold — the effective end of the empire, though resistance smoldered for decades.",
+    "link": "https://en.wikipedia.org/wiki/Cusco",
+    "lat": -13.52,
+    "lng": -71.97
+  },
+  {
+    "id": "e300",
+    "year": 1572,
+    "countryId": "inca",
+    "type": "other",
+    "title": "Vilcabamba falls — the last Inca state ends",
+    "description": "Spanish forces took the jungle refuge of Vilcabamba and executed Túpac Amaru, the final Inca of the neo-Inca state.",
+    "link": "https://en.wikipedia.org/wiki/Vilcabamba,_Peru",
+    "lat": -13.1,
+    "lng": -73.0
   }
 ]

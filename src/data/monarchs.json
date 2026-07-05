@@ -162,5 +162,14 @@
   { "id": "m146", "countryId": "ethiopia", "name": "Susenyos I",               "startYear": 1606, "endYear": 1632 },
   { "id": "m147", "countryId": "ethiopia", "name": "Fasilides",                "startYear": 1632, "endYear": 1667 },
   { "id": "m148", "countryId": "ethiopia", "name": "Yohannes I",               "startYear": 1667, "endYear": 1682 },
-  { "id": "m149", "countryId": "ethiopia", "name": "Iyasu I",                  "startYear": 1682, "endYear": 1706 }
+  { "id": "m149", "countryId": "ethiopia", "name": "Iyasu I",                  "startYear": 1682, "endYear": 1706 },
+
+  { "id": "m150", "countryId": "aztec", "name": "Ahuitzotl",     "startYear": 1486, "endYear": 1502 },
+  { "id": "m151", "countryId": "aztec", "name": "Moctezuma II",  "startYear": 1502, "endYear": 1520 },
+  { "id": "m152", "countryId": "aztec", "name": "Cuitláhuac",    "startYear": 1520, "endYear": 1520 },
+  { "id": "m153", "countryId": "aztec", "name": "Cuauhtémoc",    "startYear": 1520, "endYear": 1521 },
+
+  { "id": "m154", "countryId": "inca", "name": "Huayna Capac", "startYear": 1493, "endYear": 1527 },
+  { "id": "m155", "countryId": "inca", "name": "Huáscar",      "startYear": 1527, "endYear": 1532 },
+  { "id": "m156", "countryId": "inca", "name": "Atahualpa",    "startYear": 1532, "endYear": 1533 }
 ]
