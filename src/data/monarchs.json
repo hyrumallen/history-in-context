@@ -141,5 +141,26 @@
   { "id": "m127", "countryId": "safavid-persia", "name": "Safi",                "startYear": 1629, "endYear": 1642 },
   { "id": "m128", "countryId": "safavid-persia", "name": "Abbas II",            "startYear": 1642, "endYear": 1666 },
   { "id": "m129", "countryId": "safavid-persia", "name": "Suleiman I",          "startYear": 1666, "endYear": 1694 },
-  { "id": "m130", "countryId": "safavid-persia", "name": "Sultan Husayn",       "startYear": 1694, "endYear": 1722 }
+  { "id": "m130", "countryId": "safavid-persia", "name": "Sultan Husayn",       "startYear": 1694, "endYear": 1722 },
+
+  { "id": "m131", "countryId": "songhai", "name": "Askia Mohammad I",      "startYear": 1493, "endYear": 1528 },
+  { "id": "m132", "countryId": "songhai", "name": "Askia Musa",            "startYear": 1528, "endYear": 1531 },
+  { "id": "m133", "countryId": "songhai", "name": "Askia Mohammad Benkan", "startYear": 1531, "endYear": 1537 },
+  { "id": "m134", "countryId": "songhai", "name": "Askia Ismail",          "startYear": 1537, "endYear": 1539 },
+  { "id": "m135", "countryId": "songhai", "name": "Askia Ishaq I",         "startYear": 1539, "endYear": 1549 },
+  { "id": "m136", "countryId": "songhai", "name": "Askia Daoud",           "startYear": 1549, "endYear": 1582 },
+  { "id": "m137", "countryId": "songhai", "name": "Askia Al-Hajj",         "startYear": 1582, "endYear": 1586 },
+  { "id": "m138", "countryId": "songhai", "name": "Askia Mohammad Bani",   "startYear": 1586, "endYear": 1588 },
+  { "id": "m139", "countryId": "songhai", "name": "Askia Ishaq II",        "startYear": 1588, "endYear": 1591 },
+
+  { "id": "m140", "countryId": "ethiopia", "name": "Na'od",                    "startYear": 1494, "endYear": 1508 },
+  { "id": "m141", "countryId": "ethiopia", "name": "Dawit II (Lebna Dengel)",  "startYear": 1508, "endYear": 1540 },
+  { "id": "m142", "countryId": "ethiopia", "name": "Gelawdewos",               "startYear": 1540, "endYear": 1559 },
+  { "id": "m143", "countryId": "ethiopia", "name": "Menas",                    "startYear": 1559, "endYear": 1563 },
+  { "id": "m144", "countryId": "ethiopia", "name": "Sarsa Dengel",             "startYear": 1563, "endYear": 1597 },
+  { "id": "m145", "countryId": "ethiopia", "name": "Yaqob",                    "startYear": 1597, "endYear": 1603 },
+  { "id": "m146", "countryId": "ethiopia", "name": "Susenyos I",               "startYear": 1606, "endYear": 1632 },
+  { "id": "m147", "countryId": "ethiopia", "name": "Fasilides",                "startYear": 1632, "endYear": 1667 },
+  { "id": "m148", "countryId": "ethiopia", "name": "Yohannes I",               "startYear": 1667, "endYear": 1682 },
+  { "id": "m149", "countryId": "ethiopia", "name": "Iyasu I",                  "startYear": 1682, "endYear": 1706 }
 ]

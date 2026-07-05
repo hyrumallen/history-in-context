@@ -12,5 +12,7 @@
   { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47" },
   { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261" },
   { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40" },
-  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c" }
+  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c" },
+  { "id": "songhai", "name": "Songhai Empire", "continent": "Africa", "color": "#e6d5bd", "mapColor": "#a1743f", "mapStroke": "#7d5a30" },
+  { "id": "ethiopia", "name": "Ethiopia", "continent": "Africa", "color": "#dde3c8", "mapColor": "#8a9a5b", "mapStroke": "#6b7845" }
 ]
