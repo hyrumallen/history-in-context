@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Map Layout Playground — History in Context</title>
+<style>
+  :root {
+    --ink: #1a1a2e;
+    --sea: #b8d4e8;
+    --land: #e0e0e0;
+    --rule: #c8c8c8;
+    --rule-soft: #ededed;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background: #eceef2;
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Control panel ───────────────────────────────── */
+  .controls {
+    flex-shrink: 0;
+    background: #f4f5f8;
+    border-bottom: 1px solid #d5d8e0;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+  }
+  .controls .group { display: flex; align-items: center; gap: 8px; }
+  .controls label { color: #555; font-weight: 500; white-space: nowrap; }
+  .controls .val {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink); font-weight: 600;
+    min-width: 42px;
+  }
+  .controls input[type=range] { width: 110px; accent-color: #4a6fa5; }
+  .mode-tabs { display: flex; border: 1px solid #c5c9d4; border-radius: 6px; overflow: hidden; }
+  .mode-tabs button {
+    border: none; background: white; color: #555;
+    padding: 6px 13px; font: inherit; font-weight: 500;
+    cursor: pointer; border-right: 1px solid #c5c9d4;
+  }
+  .mode-tabs button:last-child { border-right: none; }
+  .mode-tabs button.on { background: var(--ink); color: white; }
+  .mode-tabs button:focus-visible { outline: 2px solid #4a6fa5; outline-offset: -2px; }
+  .controls .hint { color: #888; margin-left: auto; font-size: 11.5px; }
+
+  /* ── App frame ───────────────────────────────────── */
+  .frame { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+  header.app {
+    background: var(--ink); color: white;
+    padding: 0 24px;
+    display: flex; align-items: baseline; gap: 16px;
+    flex-shrink: 0; height: 52px; line-height: 52px;
+  }
+  header.app .title { font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+  header.app .subtitle { font-size: 13px; color: #9999bb; letter-spacing: 0.5px; }
+  header.app .view-toggle {
+    margin-left: auto; display: none; align-self: center; line-height: normal;
+  }
+  header.app .view-toggle button {
+    font: inherit; font-size: 12.5px; font-weight: 600;
+    padding: 5px 14px; cursor: pointer;
+    background: #2e2e4e; color: #bbbbdd; border: 1px solid #44446a;
+  }
+  header.app .view-toggle button:first-child { border-radius: 5px 0 0 5px; }
+  header.app .view-toggle button:last-child { border-radius: 0 5px 5px 0; }
+  header.app .view-toggle button.on { background: #4a6fa5; color: white; border-color: #4a6fa5; }
+  body[data-mode="toggle"] .view-toggle,
+  body[data-mode="combined"] .view-toggle { display: flex; }
+
+  /* ── Layout container: modes via data attribute ──── */
+  .split { flex: 1; display: flex; min-height: 0; position: relative; }
+  body[data-mode="stacked"] .split { flex-direction: column; }
+
+  .pane-timeline { overflow: auto; background: white; position: relative; }
+  .pane-map {
+    flex: 1; min-width: 0; min-height: 0;
+    position: relative; overflow: hidden;
+    background: var(--sea);
+  }
+
+  /* side-by-side sizing is driven by JS (flex-basis on timeline) */
+
+  /* stacked mode: timeline gets basis in vh, divider horizontal */
+  body[data-mode="stacked"] .divider {
+    width: auto; height: 7px;
+    cursor: row-resize;
+    border: none;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+  }
+  body[data-mode="stacked"] .divider .grip { width: 34px; height: 2px; }
+
+  /* floating mode: timeline full size, map absolute corner panel */
+  body[data-mode="floating"] .pane-timeline,
+  body[data-mode="combined"][data-view="timeline"] .pane-timeline { flex: 1 1 auto !important; }
+  body[data-mode="floating"] .divider,
+  body[data-mode="combined"] .divider { display: none; }
+  body[data-mode="floating"] .pane-map,
+  body[data-mode="combined"][data-view="timeline"] .pane-map {
+    position: absolute;
+    right: 18px; bottom: 18px;
+    width: var(--mini-w, 380px);
+    height: calc(var(--mini-w, 380px) * 0.55);
+    flex: none;
+    border: 2px solid var(--ink);
+    border-radius: 8px;
+    box-shadow: 0 6px 24px rgba(26,26,46,0.35);
+    cursor: zoom-in;
+    transition: width 200ms ease, height 200ms ease;
+  }
+  body[data-mode="floating"] .pane-map.expanded {
+    width: calc(100% - 36px);
+    height: calc(100% - 36px);
+    cursor: zoom-out;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body[data-mode="floating"] .pane-map { transition: none; }
+  }
+
+  /* toggle mode: one pane at a time, full size */
+  body[data-mode="toggle"] .divider { display: none; }
+  body[data-mode="toggle"][data-view="timeline"] .pane-map { display: none; }
+  body[data-mode="toggle"][data-view="timeline"] .pane-timeline { flex: 1 1 auto !important; }
+  body[data-mode="toggle"][data-view="map"] .pane-timeline,
+  body[data-mode="combined"][data-view="map"] .pane-timeline { display: none; }
+
+  .divider {
+    flex-shrink: 0;
+    width: 7px;
+    background: #dfe1e6;
+    border-left: 1px solid var(--rule);
+    border-right: 1px solid var(--rule);
+    cursor: col-resize;
+    display: flex; align-items: center; justify-content: center;
+    transition: background 120ms;
+  }
+  .divider:hover, .divider.active { background: #b9c2d0; }
+  .divider .grip { width: 2px; height: 34px; border-radius: 1px; background: #8a93a3; }
+  .divider:focus-visible { outline: 2px solid #4a6fa5; outline-offset: -2px; }
+
+  .drag-shield { position: fixed; inset: 0; z-index: 50; display: none; }
+  body.dragging .drag-shield { display: block; cursor: col-resize; }
+  body[data-mode="stacked"].dragging .drag-shield { cursor: row-resize; }
+  body.dragging { user-select: none; }
+
+  /* ── Timeline grid ───────────────────────────────── */
+  .grid { display: grid; grid-template-columns: 60px repeat(6, 180px); min-width: fit-content; }
+  .corner, .colhead {
+    position: sticky; top: 0; z-index: 2;
+    height: 48px;
+    border-bottom: 2px solid var(--rule);
+    border-right: 1px solid #d0d0d0;
+    background: #f7f7f7;
+  }
+  .corner { left: 0; z-index: 3; }
+  .colhead {
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.2px;
+    text-align: center; padding: 0 6px;
+  }
+  .yearcell {
+    position: sticky; left: 0; z-index: 1;
+    background: #f7f7f7;
+    border-right: 1px solid #d0d0d0;
+    border-bottom: 1px solid var(--rule-soft);
+    display: flex; align-items: center; justify-content: flex-end;
+    padding-right: 8px;
+    font-size: 11px;
+    font-variant-numeric: tabular-nums;
+    height: 28px;
+  }
+  .cell {
+    border-right: 1px solid #e8e8e8;
+    border-bottom: 1px solid var(--rule-soft);
+    height: 28px;
+    font-size: 11px; line-height: 1.25;
+    overflow: hidden;
+  }
+  .cell .ev {
+    padding: 2px 6px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-weight: 500; color: #333;
+  }
+
+  /* ── Map pane internals ──────────────────────────── */
+  .pane-map svg { width: 100%; height: 100%; display: block; }
+  .year-badge {
+    position: absolute; bottom: 12px; left: 16px;
+    background: rgba(26,26,46,0.82); color: white;
+    padding: 3px 10px; border-radius: 4px;
+    font-size: 13px; font-weight: 600; letter-spacing: 0.3px;
+    pointer-events: none;
+    font-variant-numeric: tabular-nums;
+  }
+  .map-hint {
+    position: absolute; bottom: 12px; right: 16px;
+    color: rgba(255,255,255,0.75); font-size: 11px;
+    pointer-events: none;
+    text-shadow: 0 1px 2px rgba(26,26,46,0.4);
+  }
+  body[data-mode="floating"] .map-hint,
+  body[data-mode="combined"][data-view="timeline"] .map-hint { display: none; }
+</style>
+</head>
+<body data-mode="side" data-view="map">
+
+<div class="controls">
+  <div class="group">
+    <label>Layout:</label>
+    <div class="mode-tabs" id="modeTabs">
+      <button data-mode="side" class="on">Side-by-side</button>
+      <button data-mode="stacked">Stacked (current)</button>
+      <button data-mode="floating">Floating mini-map</button>
+      <button data-mode="toggle">Toggle views</button>
+      <button data-mode="combined">★ Combined</button>
+    </div>
+  </div>
+  <div class="group" id="ctlSplit">
+    <label for="splitRange">Timeline share:</label>
+    <input type="range" id="splitRange" min="25" max="80" value="60">
+    <span class="val" id="splitVal">60%</span>
+  </div>
+  <div class="group" id="ctlMini" style="display:none">
+    <label for="miniRange">Mini-map size:</label>
+    <input type="range" id="miniRange" min="240" max="560" value="380">
+    <span class="val" id="miniVal">380px</span>
+  </div>
+  <span class="hint" id="hint">Drag the divider between panels · double-click it to reset</span>
+</div>
+
+<div class="frame">
+  <header class="app">
+    <span class="title">History in Context</span>
+    <span class="subtitle">1500 – 1700 · The Early Modern World</span>
+    <div class="view-toggle" id="viewToggle">
+      <button data-view="timeline">Timeline</button>
+      <button data-view="map" class="on">Map</button>
+    </div>
+  </header>
+
+  <div class="split" id="split">
+    <div class="pane-timeline" id="timelinePane">
+      <div class="grid" id="grid"></div>
+    </div>
+
+    <div class="divider" id="divider" tabindex="0" role="separator" aria-label="Resize panels">
+      <div class="grip"></div>
+    </div>
+
+    <div class="pane-map" id="mapPane">
+      <svg viewBox="0 0 800 400" preserveAspectRatio="xMidYMid meet" aria-label="Simplified world map sketch">
+        <rect width="800" height="400" fill="#b8d4e8"/>
+        <g fill="#e0e0e0" stroke="#c0c0c0" stroke-width="1">
+          <path d="M 60,60 Q 120,40 160,80 Q 180,120 150,150 Q 120,160 110,200 Q 130,230 120,280 Q 100,340 80,350 Q 70,300 80,260 Q 60,220 50,170 Q 40,100 60,60 Z"/>
+          <path d="M 340,70 Q 380,55 410,70 Q 430,85 425,110 Q 440,120 430,140 Q 400,155 370,145 Q 345,150 330,130 Q 320,95 340,70 Z"/>
+          <path d="M 360,170 Q 410,160 440,185 Q 455,220 440,260 Q 420,300 395,310 Q 375,280 370,240 Q 350,200 360,170 Z"/>
+          <path d="M 440,60 Q 530,40 620,65 Q 690,85 700,130 Q 680,170 620,180 Q 560,190 510,170 Q 460,160 445,120 Q 430,85 440,60 Z"/>
+        </g>
+        <g stroke-width="1.5" fill-opacity="0.75">
+          <ellipse cx="352" cy="82" rx="14" ry="10" fill="#7d97b1" stroke="#5a7690"/>
+          <ellipse cx="368" cy="105" rx="16" ry="12" fill="#7fae8d" stroke="#5d8a6b"/>
+          <ellipse cx="348" cy="128" rx="17" ry="10" fill="#b39a7e" stroke="#8f7659"/>
+          <ellipse cx="398" cy="102" rx="18" ry="13" fill="#aaa878" stroke="#868453"/>
+          <ellipse cx="480" cy="85" rx="34" ry="18" fill="#b18585" stroke="#8d6161"/>
+          <ellipse cx="435" cy="140" rx="26" ry="13" fill="#9d80a8" stroke="#7a5e85"/>
+        </g>
+        <g>
+          <circle cx="350" cy="80" r="3.5" fill="#2b4a6f" stroke="#fff" stroke-width="1"/>
+          <circle cx="370" cy="107" r="3.5" fill="#2f6f4a" stroke="#fff" stroke-width="1"/>
+          <circle cx="440" cy="142" r="3.5" fill="#6f2f5e" stroke="#fff" stroke-width="1"/>
+          <circle cx="130" cy="180" r="3.5" fill="#8a5a1f" stroke="#fff" stroke-width="1"/>
+        </g>
+      </svg>
+      <div class="year-badge" id="yearBadge">1500</div>
+      <div class="map-hint">Scroll to zoom · drag to pan · double-click to reset</div>
+    </div>
+  </div>
+</div>
+
+<div class="drag-shield"></div>
+
+<script>
+  // ── sample timeline data (faithful to the real app) ──
+  const countries = [
+    { id: 'england', name: 'England', color: '#c8d8e8', mapColor: '#7d97b1' },
+    { id: 'france', name: 'France', color: '#c8e8d0', mapColor: '#7fae8d' },
+    { id: 'spain', name: 'Spain', color: '#e8d8c8', mapColor: '#b39a7e' },
+    { id: 'hre', name: 'Holy Roman Empire', color: '#e8e8c8', mapColor: '#aaa878' },
+    { id: 'russia', name: 'Russia', color: '#e8c8c8', mapColor: '#b18585' },
+    { id: 'ottoman', name: 'Ottoman Empire', color: '#e0c8e8', mapColor: '#9d80a8' },
+  ];
+  const reigns = {
+    england: [1509, 1547, 1553, 1558, 1603, 1625, 1649, 1660, 1685],
+    france: [1515, 1547, 1559, 1574, 1589, 1610, 1643],
+    spain: [1516, 1556, 1598, 1621, 1665],
+    hre: [1519, 1556, 1564, 1576, 1612, 1619, 1637, 1658],
+    russia: [1533, 1584, 1598, 1613, 1645, 1676, 1682],
+    ottoman: [1512, 1520, 1566, 1574, 1595, 1603, 1617, 1623, 1640, 1648, 1687],
+  };
+  const events = {
+    '1517-hre': '95 Theses',
+    '1520-ottoman': 'Suleiman crowned',
+    '1534-england': 'Act of Supremacy',
+    '1547-russia': 'Ivan IV crowned Tsar',
+    '1555-hre': 'Peace of Augsburg',
+    '1571-spain': 'Battle of Lepanto',
+    '1572-france': "St. Bartholomew's Day",
+    '1588-england': 'Spanish Armada ↗',
+    '1598-france': 'Edict of Nantes',
+    '1613-russia': 'Romanovs begin',
+    '1618-hre': "Thirty Years' War",
+    '1642-england': 'Civil War begins',
+    '1648-hre': 'Peace of Westphalia',
+    '1666-england': 'Great Fire ↗',
+    '1683-ottoman': 'Siege of Vienna',
+    '1689-russia': 'Peter the Great',
+  };
+  function hexToRgba(hex, a) {
+    return `rgba(${parseInt(hex.slice(1,3),16)},${parseInt(hex.slice(3,5),16)},${parseInt(hex.slice(5,7),16)},${a})`;
+  }
+  function bandIndex(list, year) {
+    let i = -1;
+    for (let k = 0; k < list.length; k++) if (year >= list[k]) i = k;
+    return i;
+  }
+  const grid = document.getElementById('grid');
+  let html = '<div class="corner"></div>';
+  for (const c of countries) html += `<div class="colhead" style="background:${c.mapColor}">${c.name}</div>`;
+  for (let y = 1500; y <= 1700; y++) {
+    const label = y % 10 === 0 ? y : (y % 5 === 0 ? '·' : '');
+    const strong = y % 10 === 0;
+    html += `<div class="yearcell" style="color:${strong ? '#444' : '#ccc'};font-weight:${strong ? 600 : 400}">${label}</div>`;
+    for (const c of countries) {
+      const bi = bandIndex(reigns[c.id], y);
+      const bg = bi < 0 ? 'white' : hexToRgba(c.color, bi % 2 === 0 ? 0.3 : 0.65);
+      const ev = events[`${y}-${c.id}`];
+      html += `<div class="cell" style="background:${bg}">${ev ? `<div class="ev">${y} — ${ev}</div>` : ''}</div>`;
+    }
+  }
+  grid.innerHTML = html;
+
+  // ── year sync ──
+  const pane = document.getElementById('timelinePane');
+  const badge = document.getElementById('yearBadge');
+  pane.addEventListener('scroll', () => {
+    const year = Math.min(1700, Math.max(1500, Math.round(pane.scrollTop / 28) + 1500));
+    badge.textContent = year;
+  }, { passive: true });
+
+  // ── layout state ──
+  const split = document.getElementById('split');
+  const divider = document.getElementById('divider');
+  const mapPane = document.getElementById('mapPane');
+  const MIN = 320;
+  let mode = 'side';
+  let sidePct = 60;      // timeline share, side-by-side
+  let stackPct = 55;     // timeline share, stacked (mirrors current app's 55vh)
+
+  function apply() {
+    if (mode === 'side') {
+      const w = split.clientWidth;
+      const px = Math.min(w - MIN, Math.max(MIN, w * sidePct / 100));
+      pane.style.flex = `0 0 ${px}px`;
+    } else if (mode === 'stacked') {
+      const h = split.clientHeight;
+      const px = Math.min(h - 160, Math.max(160, h * stackPct / 100));
+      pane.style.flex = `0 0 ${px}px`;
+    } else {
+      pane.style.flex = '';
+    }
+  }
+  window.addEventListener('resize', apply);
+
+  // ── divider drag (works for both orientations) ──
+  divider.addEventListener('pointerdown', (e) => {
+    e.preventDefault();
+    divider.classList.add('active');
+    document.body.classList.add('dragging');
+    const move = (ev) => {
+      const rect = split.getBoundingClientRect();
+      if (mode === 'side') sidePct = ((ev.clientX - rect.left) / rect.width) * 100;
+      else stackPct = ((ev.clientY - rect.top) / rect.height) * 100;
+      apply();
+      syncSlider();
+    };
+    const up = () => {
+      divider.classList.remove('active');
+      document.body.classList.remove('dragging');
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', up);
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', up);
+  });
+  divider.addEventListener('dblclick', () => {
+    if (mode === 'side') sidePct = 60; else stackPct = 55;
+    apply(); syncSlider();
+  });
+  divider.addEventListener('keydown', (e) => {
+    const delta = (e.key === 'ArrowLeft' || e.key === 'ArrowUp') ? -2
+                : (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 2 : 0;
+    if (!delta) return;
+    if (mode === 'side') sidePct += delta; else stackPct += delta;
+    apply(); syncSlider();
+  });
+
+  // ── mode tabs ──
+  const tabs = document.getElementById('modeTabs');
+  tabs.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    mode = btn.dataset.mode;
+    document.body.dataset.mode = mode;
+    tabs.querySelectorAll('button').forEach(b => b.classList.toggle('on', b === btn));
+    document.getElementById('ctlSplit').style.display = (mode === 'side' || mode === 'stacked') ? '' : 'none';
+    document.getElementById('ctlMini').style.display = (mode === 'floating' || mode === 'combined') ? '' : 'none';
+    mapPane.classList.remove('expanded');
+    if (mode === 'combined' || mode === 'toggle') setView('timeline');
+    const hints = {
+      side: 'Drag the divider between panels · double-click it to reset',
+      stacked: 'This is the current app layout — drag the divider to resize',
+      floating: 'Click the mini-map to expand it, click again to shrink',
+      toggle: 'Use the Timeline / Map buttons in the header to switch views',
+      combined: 'Click the mini-map or the header Map button for the full map · Timeline button to come back',
+    };
+    document.getElementById('hint').textContent = hints[mode];
+    apply(); syncSlider();
+  });
+
+  // ── split slider ──
+  const splitRange = document.getElementById('splitRange');
+  const splitVal = document.getElementById('splitVal');
+  function syncSlider() {
+    const v = Math.round(mode === 'stacked' ? stackPct : sidePct);
+    splitRange.value = v;
+    splitVal.textContent = v + '%';
+  }
+  splitRange.addEventListener('input', () => {
+    if (mode === 'stacked') stackPct = +splitRange.value;
+    else sidePct = +splitRange.value;
+    splitVal.textContent = splitRange.value + '%';
+    apply();
+  });
+
+  // ── floating mini-map ──
+  const miniRange = document.getElementById('miniRange');
+  const miniVal = document.getElementById('miniVal');
+  miniRange.addEventListener('input', () => {
+    document.body.style.setProperty('--mini-w', miniRange.value + 'px');
+    miniVal.textContent = miniRange.value + 'px';
+  });
+  mapPane.addEventListener('click', () => {
+    if (mode === 'floating') mapPane.classList.toggle('expanded');
+    if (mode === 'combined' && document.body.dataset.view === 'timeline') setView('map');
+  });
+
+  // ── toggle views ──
+  const viewToggle = document.getElementById('viewToggle');
+  function setView(view) {
+    document.body.dataset.view = view;
+    viewToggle.querySelectorAll('button').forEach(b => b.classList.toggle('on', b.dataset.view === view));
+  }
+  viewToggle.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    setView(btn.dataset.view);
+  });
+
+  apply();
+  syncSlider();
+</script>
+</body>
+</html>

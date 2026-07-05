@@ -1,7 +1,7 @@
 export default function CountryHeader({ country }) {
   return (
     <div style={{
-      background: country.color,
+      background: country.mapColor,
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
@@ -11,7 +11,7 @@ export default function CountryHeader({ country }) {
       textAlign: 'center',
       padding: '4px 8px',
       height: '100%',
-      color: '#1a1a1a',
+      color: '#1a1a2e',
     }}>
       {country.name}
     </div>
