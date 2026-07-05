@@ -41,3 +41,11 @@ a.event-link:hover {
 @media (prefers-reduced-motion: reduce) {
   .map-panel { transition: none; }
 }
+
+.sidebar-panel {
+  transition: width 200ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-panel { transition: none; }
+}
