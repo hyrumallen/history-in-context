@@ -1,16 +1,30 @@
-# React + Vite
+# History in Context
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A browser-based timeline of the Early Modern world (1500–1700). Historical events didn't happen in isolation — this app shows 18 countries side by side so you can see what was happening everywhere at once.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **Timeline grid** — one column per country, one row per year, with events and color-coded ruler reign bands
+- **Dynamic country selection** — a collapsible sidebar groups 18 countries by continent (Europe, Asia & Middle East, Africa, Americas) with per-country and per-continent checkboxes; your selection is remembered between visits
+- **World map** — a floating mini-map follows your scroll year, showing shifting territorial borders and event pins; click it (or the header toggle) for a full-screen map with zoom and pan
+- **Linked navigation** — click a map pin to jump to that event in the timeline
 
-## React Compiler
+## Running locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm install
+npm run dev
+```
 
-## Expanding the Oxlint configuration
+Then open http://localhost:5173.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## Tech
+
+React 19 + Vite, no backend. All historical data lives in JSON files under `src/data/`:
+
+- `countries.json` — the 18 countries with continent grouping and color palette
+- `monarchs.json` — ruler reigns (shown as shaded bands in each column)
+- `events.json` — 300 dated events with coordinates, descriptions, and links
+- `territories.json` — territorial border polygons at 8 time snapshots (1500–1700)
+
+Design specs and implementation plans are under `docs/superpowers/`.
