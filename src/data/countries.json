@@ -4,5 +4,9 @@
   { "id": "spain", "name": "Spain", "continent": "Europe", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
   { "id": "holy-roman-empire", "name": "Holy Roman Empire", "continent": "Europe", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
   { "id": "russia", "name": "Russia", "continent": "Europe", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
-  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" }
+  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" },
+  { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f" },
+  { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f" },
+  { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199" },
+  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c" }
 ]
