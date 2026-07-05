@@ -1,7 +1,23 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import countries from './data/countries.json'
 import TimelineGrid from './components/TimelineGrid'
-import Legend from './components/Legend'
+import CountrySidebar from './components/CountrySidebar'
 import WorldMap from './components/WorldMap'
+
+const DEFAULT_IDS = ['england', 'france', 'spain', 'holy-roman-empire', 'russia', 'ottoman-empire']
+const STORAGE_KEY = 'hic-selected-countries'
+
+function loadSelection() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY))
+    if (Array.isArray(saved) && saved.every(id => countries.some(c => c.id === id))) {
+      return saved
+    }
+  } catch {
+    // corrupted storage — fall through to default
+  }
+  return DEFAULT_IDS
+}
 
 const MINI_PANEL_STYLE = {
   position: 'absolute',
@@ -29,7 +45,7 @@ const FULL_PANEL_STYLE = {
   zIndex: 10,
 }
 
-function viewButtonStyle(active, side) {
+function headerButtonStyle(active, radius) {
   return {
     font: 'inherit',
     fontSize: '12.5px',
@@ -39,14 +55,25 @@ function viewButtonStyle(active, side) {
     background: active ? '#4a6fa5' : '#2e2e4e',
     color: active ? 'white' : '#bbbbdd',
     border: `1px solid ${active ? '#4a6fa5' : '#44446a'}`,
-    borderRadius: side === 'left' ? '5px 0 0 5px' : '0 5px 5px 0',
+    borderRadius: radius,
   }
 }
 
 function App() {
   const [currentYear, setCurrentYear] = useState(1500)
   const [view, setView] = useState('timeline')
+  const [selectedIds, setSelectedIds] = useState(loadSelection)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const highlightElRef = useRef(null)
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedIds))
+  }, [selectedIds])
+
+  const selectedCountries = useMemo(
+    () => countries.filter(c => selectedIds.includes(c.id)),
+    [selectedIds]
+  )
 
   const handleYearChange = useCallback((year) => {
     setCurrentYear(year)
@@ -69,6 +96,8 @@ function App() {
       if (highlightElRef.current === el) highlightElRef.current = null
     }, { once: true })
   }, [])
+
+  const openSidebar = useCallback(() => setSidebarOpen(true), [])
 
   const isMini = view === 'timeline'
 
@@ -103,35 +132,54 @@ function App() {
         <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
           1500 – 1700 · The Early Modern World
         </span>
-        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '20px' }}>
+        <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex' }}>
-            <button style={viewButtonStyle(view === 'timeline', 'left')} onClick={() => setView('timeline')}>
+            <button style={headerButtonStyle(view === 'timeline', '5px 0 0 5px')} onClick={() => setView('timeline')}>
               Timeline
             </button>
-            <button style={viewButtonStyle(view === 'map', 'right')} onClick={() => setView('map')}>
+            <button style={headerButtonStyle(view === 'map', '0 5px 5px 0')} onClick={() => setView('map')}>
               Map
             </button>
           </div>
-          <Legend />
+          <button
+            style={headerButtonStyle(sidebarOpen, '5px')}
+            onClick={() => setSidebarOpen(o => !o)}
+            aria-expanded={sidebarOpen}
+          >
+            Countries
+          </button>
         </div>
       </header>
 
-      <div style={{ flex: 1, position: 'relative', overflow: 'hidden' }}>
-        <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
-          <TimelineGrid onYearChange={handleYearChange} />
+      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
+          <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
+            <TimelineGrid
+              onYearChange={handleYearChange}
+              selectedCountries={selectedCountries}
+              onOpenSidebar={openSidebar}
+            />
+          </div>
+
+          <div
+            className="map-panel"
+            style={isMini ? MINI_PANEL_STYLE : FULL_PANEL_STYLE}
+            {...expandProps}
+          >
+            <WorldMap
+              mode={isMini ? 'mini' : 'full'}
+              currentYear={currentYear}
+              onPinClick={handlePinClick}
+            />
+          </div>
         </div>
 
-        <div
-          className="map-panel"
-          style={isMini ? MINI_PANEL_STYLE : FULL_PANEL_STYLE}
-          {...expandProps}
-        >
-          <WorldMap
-            mode={isMini ? 'mini' : 'full'}
-            currentYear={currentYear}
-            onPinClick={handlePinClick}
-          />
-        </div>
+        <CountrySidebar
+          countries={countries}
+          selectedIds={selectedIds}
+          onChange={setSelectedIds}
+          open={sidebarOpen}
+        />
       </div>
     </div>
   )
