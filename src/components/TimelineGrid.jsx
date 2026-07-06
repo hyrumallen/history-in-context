@@ -4,8 +4,8 @@ import monarchs from '../data/monarchs.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
 
-const START_YEAR = 1500
-const END_YEAR = 1700
+import { START_YEAR, END_YEAR } from '../constants'
+
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
 const YEAR_COL_WIDTH = '60px'
@@ -71,7 +71,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       if (timer) return
       timer = setTimeout(() => {
         timer = null
-        const year = Math.min(1700, Math.max(1500, Math.round(el.scrollTop / parseInt(ROW_HEIGHT)) + START_YEAR))
+        const year = Math.min(END_YEAR, Math.max(START_YEAR, Math.round(el.scrollTop / parseInt(ROW_HEIGHT)) + START_YEAR))
         onYearChange(year)
       }, 50)
     }

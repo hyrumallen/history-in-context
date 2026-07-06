@@ -1,5 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import countries from './data/countries.json'
+import { START_YEAR, END_YEAR } from './constants'
 import TimelineGrid from './components/TimelineGrid'
 import CountrySidebar from './components/CountrySidebar'
 import WorldMap from './components/WorldMap'
@@ -132,7 +133,7 @@ function App() {
           History in Context
         </span>
         <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
-          1500 – 1700 · The Early Modern World
+          {START_YEAR} – {END_YEAR} · Five Centuries of History
         </span>
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex' }}>
