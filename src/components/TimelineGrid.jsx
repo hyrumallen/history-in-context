@@ -1,6 +1,6 @@
 import { useRef, useEffect, memo } from 'react'
 import events from '../data/events.json'
-import monarchs from '../data/monarchs.json'
+import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
 
@@ -21,14 +21,14 @@ for (const event of events) {
   eventMap[key].push(event)
 }
 
-// Build monarch lookup: countryId -> monarchs sorted by startYear
-const monarchsByCountry = {}
-for (const monarch of monarchs) {
-  if (!monarchsByCountry[monarch.countryId]) monarchsByCountry[monarch.countryId] = []
-  monarchsByCountry[monarch.countryId].push(monarch)
+// Build ruler lookup: countryId -> rulers sorted by startYear
+const rulersByCountry = {}
+for (const ruler of rulers) {
+  if (!rulersByCountry[ruler.countryId]) rulersByCountry[ruler.countryId] = []
+  rulersByCountry[ruler.countryId].push(ruler)
 }
-for (const countryId in monarchsByCountry) {
-  monarchsByCountry[countryId].sort((a, b) => a.startYear - b.startYear)
+for (const countryId in rulersByCountry) {
+  rulersByCountry[countryId].sort((a, b) => a.startYear - b.startYear)
 }
 
 function hexToRgba(hex, alpha) {
@@ -38,8 +38,8 @@ function hexToRgba(hex, alpha) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`
 }
 
-function getReigningMonarch(year, country) {
-  const reigns = monarchsByCountry[country.id] || []
+function getReigningRuler(year, country) {
+  const reigns = rulersByCountry[country.id] || []
   for (let i = reigns.length - 1; i >= 0; i--) {
     if (year >= reigns[i].startYear && year <= reigns[i].endYear) {
       return reigns[i]
@@ -48,10 +48,10 @@ function getReigningMonarch(year, country) {
   return null
 }
 
-function getMonarchBg(year, country) {
-  const reigns = monarchsByCountry[country.id] || []
+function getRulerBg(year, country) {
+  const reigns = rulersByCountry[country.id] || []
   // Iterate from the end so that when two reigns share a start/end year,
-  // the incoming monarch's shade takes effect on that year.
+  // the incoming ruler's shade takes effect on that year.
   for (let i = reigns.length - 1; i >= 0; i--) {
     if (year >= reigns[i].startYear && year <= reigns[i].endYear) {
       return hexToRgba(country.color, i % 2 === 0 ? 0.3 : 0.65)
@@ -92,8 +92,8 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
       {/* Country cells */}
       {selectedCountries.map(country => {
         const cellEvents = eventMap[`${year}-${country.id}`] || []
-        const monarch = getReigningMonarch(year, country)
-        const tooltip = monarch ? `${monarch.name} (${monarch.startYear}–${monarch.endYear})` : ''
+        const ruler = getReigningRuler(year, country)
+        const tooltip = ruler ? `${ruler.title ? ruler.title + ' ' : ''}${ruler.name} (${ruler.startYear}–${ruler.endYear})` : ''
         return (
           <div
             key={`${year}-${country.id}`}
@@ -101,7 +101,7 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
             style={{
               borderRight: '1px solid #e8e8e8',
               borderBottom: '1px solid #ededed',
-              background: getMonarchBg(year, country),
+              background: getRulerBg(year, country),
             }}
           >
             {cellEvents.map(event => (
