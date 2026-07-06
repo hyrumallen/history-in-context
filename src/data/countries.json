@@ -1,10 +1,57 @@
 [
-  { "id": "england", "name": "England", "continent": "Europe", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690" },
-  { "id": "france", "name": "France", "continent": "Europe", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b" },
-  { "id": "spain", "name": "Spain", "continent": "Europe", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659" },
-  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "continent": "Europe", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453" },
-  { "id": "russia", "name": "Russia", "continent": "Europe", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161" },
-  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85" },
+  { "id": "england", "name": "England", "continent": "Europe", "color": "#c8d8e8", "mapColor": "#7d97b1", "mapStroke": "#5a7690",
+    "eras": [
+      { "name": "England",        "startYear": 1500, "endYear": 1707 },
+      { "name": "Great Britain",  "startYear": 1707, "endYear": 1801 },
+      { "name": "United Kingdom", "startYear": 1801, "endYear": 2000 }
+    ] },
+  { "id": "france", "name": "France", "continent": "Europe", "color": "#c8e8d0", "mapColor": "#7fae8d", "mapStroke": "#5d8a6b",
+    "eras": [
+      { "name": "Kingdom of France",    "startYear": 1500, "endYear": 1792 },
+      { "name": "First Republic",       "startYear": 1792, "endYear": 1804 },
+      { "name": "First Empire",         "startYear": 1804, "endYear": 1815 },
+      { "name": "Restoration Monarchy", "startYear": 1815, "endYear": 1848 },
+      { "name": "Second Republic",      "startYear": 1848, "endYear": 1852 },
+      { "name": "Second Empire",        "startYear": 1852, "endYear": 1870 },
+      { "name": "Third Republic",       "startYear": 1870, "endYear": 1940 },
+      { "name": "Vichy France",         "startYear": 1940, "endYear": 1944 },
+      { "name": "Fourth Republic",      "startYear": 1944, "endYear": 1958 },
+      { "name": "Fifth Republic",       "startYear": 1958, "endYear": 2000 }
+    ] },
+  { "id": "spain", "name": "Spain", "continent": "Europe", "color": "#e8d8c8", "mapColor": "#b39a7e", "mapStroke": "#8f7659",
+    "eras": [
+      { "name": "Habsburg Spain",    "startYear": 1500, "endYear": 1700 },
+      { "name": "Bourbon Spain",     "startYear": 1700, "endYear": 1873 },
+      { "name": "First Republic",    "startYear": 1873, "endYear": 1874 },
+      { "name": "Restoration Spain", "startYear": 1874, "endYear": 1931 },
+      { "name": "Second Republic",   "startYear": 1931, "endYear": 1939 },
+      { "name": "Francoist Spain",   "startYear": 1939, "endYear": 1975 },
+      { "name": "Kingdom of Spain",  "startYear": 1975, "endYear": 2000 }
+    ] },
+  { "id": "holy-roman-empire", "name": "Holy Roman Empire", "continent": "Europe", "color": "#e8e8c8", "mapColor": "#aaa878", "mapStroke": "#868453",
+    "eras": [
+      { "name": "Holy Roman Empire",   "startYear": 1500, "endYear": 1806 },
+      { "name": "German Confederation", "startYear": 1815, "endYear": 1871 },
+      { "name": "German Empire",       "startYear": 1871, "endYear": 1918 },
+      { "name": "Weimar Republic",     "startYear": 1919, "endYear": 1933 },
+      { "name": "Nazi Germany",        "startYear": 1933, "endYear": 1945 },
+      { "name": "Occupied Germany",    "startYear": 1945, "endYear": 1949 },
+      { "name": "West & East Germany", "startYear": 1949, "endYear": 1990 },
+      { "name": "Germany",             "startYear": 1990, "endYear": 2000 }
+    ] },
+  { "id": "russia", "name": "Russia", "continent": "Europe", "color": "#e8c8c8", "mapColor": "#b18585", "mapStroke": "#8d6161",
+    "eras": [
+      { "name": "Tsardom of Russia",  "startYear": 1500, "endYear": 1721 },
+      { "name": "Russian Empire",     "startYear": 1721, "endYear": 1917 },
+      { "name": "Soviet Russia",      "startYear": 1917, "endYear": 1922 },
+      { "name": "Soviet Union",       "startYear": 1922, "endYear": 1991 },
+      { "name": "Russian Federation", "startYear": 1991, "endYear": 2000 }
+    ] },
+  { "id": "ottoman-empire", "name": "Ottoman Empire", "continent": "Asia & Middle East", "color": "#e0c8e8", "mapColor": "#9d80a8", "mapStroke": "#7a5e85",
+    "eras": [
+      { "name": "Ottoman Empire",     "startYear": 1500, "endYear": 1922 },
+      { "name": "Republic of Turkey", "startYear": 1923, "endYear": 2000 }
+    ] },
   { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f" },
   { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f" },
   { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199" },
