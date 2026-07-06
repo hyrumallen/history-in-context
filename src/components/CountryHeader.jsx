@@ -1,4 +1,6 @@
-export default function CountryHeader({ country }) {
+import { getEraName } from '../eras'
+
+export default function CountryHeader({ country, year }) {
   return (
     <div style={{
       background: country.mapColor,
@@ -13,7 +15,7 @@ export default function CountryHeader({ country }) {
       height: '100%',
       color: '#1a1a2e',
     }}>
-      {country.name}
+      {getEraName(country, year)}
     </div>
   )
 }

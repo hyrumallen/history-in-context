@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react'
+import { useRef, useEffect, memo } from 'react'
 import events from '../data/events.json'
 import monarchs from '../data/monarchs.json'
 import CountryHeader from './CountryHeader'
@@ -60,7 +60,63 @@ function getMonarchBg(year, country) {
   return 'white'
 }
 
-export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar }) {
+// Memoized so scroll-driven currentYear updates re-render only the headers,
+// not the 501-row grid body.
+const GridRows = memo(function GridRows({ selectedCountries }) {
+  return YEARS.map(year => (
+    <>
+      {/* Year label */}
+      <div
+        key={`y-${year}`}
+        style={{
+          position: 'sticky',
+          left: 0,
+          zIndex: 1,
+          background: '#f7f7f7',
+          borderRight: '1px solid #d0d0d0',
+          borderBottom: '1px solid #ededed',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'flex-end',
+          paddingRight: '8px',
+          fontSize: '11px',
+          letterSpacing: '0.2px',
+          fontVariantNumeric: 'tabular-nums',
+          color: year % 10 === 0 ? '#444' : '#ccc',
+          fontWeight: year % 10 === 0 ? '600' : '400',
+        }}
+      >
+        {year % 10 === 0 ? year : (year % 5 === 0 ? '·' : '')}
+      </div>
+
+      {/* Country cells */}
+      {selectedCountries.map(country => {
+        const cellEvents = eventMap[`${year}-${country.id}`] || []
+        const monarch = getReigningMonarch(year, country)
+        const tooltip = monarch ? `${monarch.name} (${monarch.startYear}–${monarch.endYear})` : ''
+        return (
+          <div
+            key={`${year}-${country.id}`}
+            title={tooltip}
+            style={{
+              borderRight: '1px solid #e8e8e8',
+              borderBottom: '1px solid #ededed',
+              background: getMonarchBg(year, country),
+            }}
+          >
+            {cellEvents.map(event => (
+              <div key={event.id} data-event-id={event.id}>
+                <EventCell event={event} />
+              </div>
+            ))}
+          </div>
+        )
+      })}
+    </>
+  ))
+})
+
+export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
   const scrollRef = useRef(null)
 
   useEffect(() => {
@@ -146,62 +202,12 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
             borderBottom: '2px solid #c8c8c8',
             borderRight: '1px solid #d0d0d0',
           }}>
-            <CountryHeader country={country} />
+            <CountryHeader country={country} year={currentYear} />
           </div>
         ))}
 
         {/* One row per year */}
-        {YEARS.map(year => (
-          <>
-            {/* Year label */}
-            <div
-              key={`y-${year}`}
-              style={{
-                position: 'sticky',
-                left: 0,
-                zIndex: 1,
-                background: '#f7f7f7',
-                borderRight: '1px solid #d0d0d0',
-                borderBottom: '1px solid #ededed',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                paddingRight: '8px',
-                fontSize: '11px',
-                letterSpacing: '0.2px',
-                fontVariantNumeric: 'tabular-nums',
-                color: year % 10 === 0 ? '#444' : '#ccc',
-                fontWeight: year % 10 === 0 ? '600' : '400',
-              }}
-            >
-              {year % 10 === 0 ? year : (year % 5 === 0 ? '·' : '')}
-            </div>
-
-            {/* Country cells */}
-            {selectedCountries.map(country => {
-              const cellEvents = eventMap[`${year}-${country.id}`] || []
-              const monarch = getReigningMonarch(year, country)
-              const tooltip = monarch ? `${monarch.name} (${monarch.startYear}–${monarch.endYear})` : ''
-              return (
-                <div
-                  key={`${year}-${country.id}`}
-                  title={tooltip}
-                  style={{
-                    borderRight: '1px solid #e8e8e8',
-                    borderBottom: '1px solid #ededed',
-                    background: getMonarchBg(year, country),
-                  }}
-                >
-                  {cellEvents.map(event => (
-                    <div key={event.id} data-event-id={event.id}>
-                      <EventCell event={event} />
-                    </div>
-                  ))}
-                </div>
-              )
-            })}
-          </>
-        ))}
+        <GridRows selectedCountries={selectedCountries} />
 
       </div>
     </div>

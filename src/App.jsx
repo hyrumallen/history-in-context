@@ -161,6 +161,7 @@ function App() {
               onYearChange={handleYearChange}
               selectedCountries={selectedCountries}
               onOpenSidebar={openSidebar}
+              currentYear={currentYear}
             />
           </div>
 
