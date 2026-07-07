@@ -1,17 +1,48 @@
-export const TYPE_COLORS = {
-  monarch: '#c9a227',
-  war: '#c0392b',
-  birth: '#2980b9',
-  death: '#7f8c8d',
-  other: '#888',
-}
+import { useRef, useEffect } from 'react'
+import { TYPE_COLORS } from '../eventTypeColors'
+import { showCard, scheduleHide } from '../hoverCardStore'
+
+const HOVER_DELAY_MS = 400
 
 export default function EventCell({ event }) {
   const color = TYPE_COLORS[event.type] ?? TYPE_COLORS.other
+  const elRef = useRef(null)
+  const timerRef = useRef(null)
 
-  const inner = (
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
+  const open = (pinned) => {
+    clearTimeout(timerRef.current)
+    showCard(event, elRef.current.getBoundingClientRect(), pinned)
+  }
+
+  const onMouseEnter = () => {
+    clearTimeout(timerRef.current)
+    timerRef.current = setTimeout(() => open(false), HOVER_DELAY_MS)
+  }
+
+  const onMouseLeave = () => {
+    clearTimeout(timerRef.current)
+    scheduleHide()
+  }
+
+  const onKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      open(true)
+    }
+  }
+
+  return (
     <div
-      title={event.description}
+      ref={elRef}
+      className="event-cell"
+      role="button"
+      tabIndex={0}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={() => open(true)}
+      onKeyDown={onKeyDown}
       style={{
         display: 'flex',
         alignItems: 'flex-start',
@@ -20,6 +51,7 @@ export default function EventCell({ event }) {
         fontSize: '11.5px',
         lineHeight: '1.4',
         color: '#1a1a1a',
+        cursor: 'pointer',
       }}
     >
       <span style={{
@@ -35,25 +67,8 @@ export default function EventCell({ event }) {
           {event.year}
         </span>
         {event.title}
-        {event.link && (
-          <span style={{ color: '#aaa', fontSize: '10px', marginLeft: '3px' }}>↗</span>
-        )}
+        <span style={{ color: '#aaa', fontSize: '10px', marginLeft: '3px' }}>↗</span>
       </span>
     </div>
   )
-
-  if (event.link) {
-    return (
-      <a
-        href={event.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="event-link"
-        style={{ textDecoration: 'none', display: 'block' }}
-      >
-        {inner}
-      </a>
-    )
-  }
-  return inner
 }

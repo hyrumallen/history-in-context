@@ -48,7 +48,6 @@ twelve disappear from the map past the 1700 snapshot. Intentional until their
 batches land (stale borders were judged worse than absence), but it can read as
 a bug. Resolved incrementally by F1–F3.
 
-### B3. EventCell fast-refresh lint warning
-`oxlint` warns that `src/components/EventCell.jsx` exports non-component values
-alongside the component, which breaks Vite fast refresh for that file. Move the
-extra exports to their own module. Cosmetic; oldest open warning in the repo.
+### B3. EventCell fast-refresh lint warning — FIXED in v26.4
+`TYPE_COLORS` moved to `src/eventTypeColors.js` as part of the Wikipedia hover
+summaries feature; the `oxlint` warning is gone.
