@@ -3,6 +3,7 @@ import events from '../data/events.json'
 import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
+import { WatermarkLayer, RibbonLabelLayer } from './GridOverlays'
 
 import { START_YEAR, END_YEAR, SERIF } from '../constants'
 import { measureOffsets, yearAtOffset } from '../rowOffsets'
@@ -107,7 +108,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   const innerRef = useRef(null)
   const offsetsRef = useRef([])
   const [measureTick, setMeasureTick] = useState(0)
-  void measureTick
+  void measureTick // overlays below re-read offsetsRef on every measure-triggered render
 
   useEffect(() => {
     const inner = innerRef.current
@@ -181,6 +182,10 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   return (
     <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%', background: '#f8f3e7' }}>
       <div ref={innerRef} style={{ position: 'relative', minWidth: 'fit-content' }}>
+      <WatermarkLayer
+        offsets={offsetsRef.current}
+        contentHeight={innerRef.current?.scrollHeight ?? 0}
+      />
       <div style={{
         display: 'grid',
         gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${selectedCountries.length}, ${COUNTRY_COL_WIDTH})`,
@@ -216,6 +221,12 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         <GridRows selectedCountries={selectedCountries} />
 
       </div>
+      <RibbonLabelLayer
+        offsets={offsetsRef.current}
+        contentHeight={innerRef.current?.scrollHeight ?? 0}
+        selectedCountries={selectedCountries}
+        rulersByCountry={rulersByCountry}
+      />
       </div>
     </div>
   )
