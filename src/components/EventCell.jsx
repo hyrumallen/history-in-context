@@ -55,19 +55,19 @@ export default function EventCell({ event }) {
       }}
     >
       <span style={{
-        width: '7px',
-        height: '7px',
+        width: '6px',
+        height: '6px',
         borderRadius: '50%',
         background: color,
         flexShrink: 0,
         marginTop: '3px',
       }} />
       <span>
-        <span style={{ color: '#aaa', marginRight: '4px', fontVariantNumeric: 'tabular-nums', fontSize: '11px' }}>
+        <span style={{ color: '#a08c62', fontStyle: 'italic', marginRight: '4px', fontVariantNumeric: 'tabular-nums', fontSize: '11px' }}>
           {event.year}
         </span>
         {event.title}
-        <span style={{ color: '#aaa', fontSize: '10px', marginLeft: '3px' }}>↗</span>
+        <span style={{ color: '#a08c62', fontSize: '10px', marginLeft: '3px' }}>↗</span>
       </span>
     </div>
   )

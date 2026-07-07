@@ -6,6 +6,7 @@ import EventCell from './EventCell'
 
 import { START_YEAR, END_YEAR, SERIF } from '../constants'
 import { measureOffsets, yearAtOffset } from '../rowOffsets'
+import { reignShade, reignIndexAt } from '../reignShades'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
@@ -32,13 +33,6 @@ for (const countryId in rulersByCountry) {
   rulersByCountry[countryId].sort((a, b) => a.startYear - b.startYear)
 }
 
-function hexToRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
 function getReigningRuler(year, country) {
   const reigns = rulersByCountry[country.id] || []
   for (let i = reigns.length - 1; i >= 0; i--) {
@@ -47,18 +41,6 @@ function getReigningRuler(year, country) {
     }
   }
   return null
-}
-
-function getRulerBg(year, country) {
-  const reigns = rulersByCountry[country.id] || []
-  // Iterate from the end so that when two reigns share a start/end year,
-  // the incoming ruler's shade takes effect on that year.
-  for (let i = reigns.length - 1; i >= 0; i--) {
-    if (year >= reigns[i].startYear && year <= reigns[i].endYear) {
-      return hexToRgba(country.color, i % 2 === 0 ? 0.3 : 0.65)
-    }
-  }
-  return 'white'
 }
 
 // Memoized so scroll-driven currentYear updates re-render only the headers,
@@ -95,13 +77,16 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
         const cellEvents = eventMap[`${year}-${country.id}`] || []
         const ruler = getReigningRuler(year, country)
         const tooltip = ruler ? `${ruler.title ? ruler.title + ' ' : ''}${ruler.name} (${ruler.startYear}–${ruler.endYear})` : ''
+        const idx = reignIndexAt(rulersByCountry[country.id] || [], year)
+        const strip = idx >= 0 ? reignShade(idx, country) : null
         return (
           <div
             key={`${year}-${country.id}`}
             title={tooltip}
             style={{
               borderTop: year % 10 === 0 ? '1px solid #e5d9bd' : 'none',
-              background: getRulerBg(year, country),
+              background: strip ? `linear-gradient(to right, ${strip} 15px, transparent 15px)` : 'transparent',
+              paddingLeft: '19px',
               fontFamily: SERIF,
             }}
           >
