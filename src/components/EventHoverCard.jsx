@@ -1,6 +1,7 @@
 import { useSyncExternalStore, useState, useEffect, useRef } from 'react'
 import { getCardState, subscribeCard, cancelHide, scheduleHide, closeCard } from '../hoverCardStore'
 import { fetchSummary } from '../wikipedia'
+import { SERIF } from '../constants'
 
 const CARD_WIDTH = 340
 const EST_HEIGHT = 240
@@ -57,8 +58,8 @@ export default function EventHoverCard() {
         left,
         width: CARD_WIDTH,
         zIndex: 50,
-        background: 'white',
-        border: '1px solid #ccc',
+        background: '#fdf9ef',
+        border: '1px solid #d8c9a8',
         borderRadius: 8,
         boxShadow: '0 6px 24px rgba(26, 26, 46, 0.25)',
         padding: '12px 14px',
@@ -67,7 +68,7 @@ export default function EventHoverCard() {
         color: '#1a1a1a',
       }}
     >
-      <div style={{ fontWeight: 600, marginBottom: 6 }}>
+      <div style={{ fontFamily: SERIF, fontWeight: 600, marginBottom: 6 }}>
         <span style={{ color: '#aaa', marginRight: 6, fontVariantNumeric: 'tabular-nums' }}>{event.year}</span>
         {event.title}
       </div>

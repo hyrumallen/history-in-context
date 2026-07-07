@@ -1,10 +1,13 @@
-import { useRef, useEffect, memo, Fragment } from 'react'
+import { useRef, useEffect, useState, memo, Fragment } from 'react'
 import events from '../data/events.json'
 import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
+import { WatermarkLayer, RibbonLabelLayer } from './GridOverlays'
 
-import { START_YEAR, END_YEAR } from '../constants'
+import { START_YEAR, END_YEAR, SERIF } from '../constants'
+import { measureOffsets, yearAtOffset } from '../rowOffsets'
+import { reignShade, reignIndexAt } from '../reignShades'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
@@ -31,13 +34,6 @@ for (const countryId in rulersByCountry) {
   rulersByCountry[countryId].sort((a, b) => a.startYear - b.startYear)
 }
 
-function hexToRgba(hex, alpha) {
-  const r = parseInt(hex.slice(1, 3), 16)
-  const g = parseInt(hex.slice(3, 5), 16)
-  const b = parseInt(hex.slice(5, 7), 16)
-  return `rgba(${r}, ${g}, ${b}, ${alpha})`
-}
-
 function getReigningRuler(year, country) {
   const reigns = rulersByCountry[country.id] || []
   for (let i = reigns.length - 1; i >= 0; i--) {
@@ -48,18 +44,6 @@ function getReigningRuler(year, country) {
   return null
 }
 
-function getRulerBg(year, country) {
-  const reigns = rulersByCountry[country.id] || []
-  // Iterate from the end so that when two reigns share a start/end year,
-  // the incoming ruler's shade takes effect on that year.
-  for (let i = reigns.length - 1; i >= 0; i--) {
-    if (year >= reigns[i].startYear && year <= reigns[i].endYear) {
-      return hexToRgba(country.color, i % 2 === 0 ? 0.3 : 0.65)
-    }
-  }
-  return 'white'
-}
-
 // Memoized so scroll-driven currentYear updates re-render only the headers,
 // not the 501-row grid body.
 const GridRows = memo(function GridRows({ selectedCountries }) {
@@ -68,25 +52,25 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
       {/* Year label */}
       <div
         key={`y-${year}`}
+        data-year-row={year}
         style={{
           position: 'sticky',
           left: 0,
           zIndex: 1,
-          background: '#f7f7f7',
-          borderRight: '1px solid #d0d0d0',
-          borderBottom: '1px solid #ededed',
+          background: '#f8f3e7',
+          borderTop: year % 10 === 0 ? '1px solid #e5d9bd' : 'none',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'flex-end',
           paddingRight: '8px',
-          fontSize: '11px',
-          letterSpacing: '0.2px',
+          fontFamily: SERIF,
           fontVariantNumeric: 'tabular-nums',
-          color: year % 10 === 0 ? '#444' : '#ccc',
-          fontWeight: year % 10 === 0 ? '600' : '400',
+          fontSize: year % 10 === 0 ? '11px' : '9.5px',
+          color: year % 10 === 0 ? '#7a6640' : '#cdbd9a',
+          fontWeight: year % 10 === 0 ? '700' : '400',
         }}
       >
-        {year % 10 === 0 ? year : (year % 5 === 0 ? '·' : '')}
+        {year % 5 === 0 ? year : ''}
       </div>
 
       {/* Country cells */}
@@ -94,14 +78,17 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
         const cellEvents = eventMap[`${year}-${country.id}`] || []
         const ruler = getReigningRuler(year, country)
         const tooltip = ruler ? `${ruler.title ? ruler.title + ' ' : ''}${ruler.name} (${ruler.startYear}–${ruler.endYear})` : ''
+        const idx = reignIndexAt(rulersByCountry[country.id] || [], year)
+        const strip = idx >= 0 ? reignShade(idx, country) : null
         return (
           <div
             key={`${year}-${country.id}`}
             title={tooltip}
             style={{
-              borderRight: '1px solid #e8e8e8',
-              borderBottom: '1px solid #ededed',
-              background: getRulerBg(year, country),
+              borderTop: year % 10 === 0 ? '1px solid #e5d9bd' : 'none',
+              background: strip ? `linear-gradient(to right, ${strip} 15px, transparent 15px)` : 'transparent',
+              paddingLeft: '19px',
+              fontFamily: SERIF,
             }}
           >
             {cellEvents.map(event => (
@@ -118,6 +105,27 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
 
 export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
   const scrollRef = useRef(null)
+  const innerRef = useRef(null)
+  const offsetsRef = useRef([])
+  const [measureTick, setMeasureTick] = useState(0)
+  void measureTick // overlays below re-read offsetsRef on every measure-triggered render
+
+  useEffect(() => {
+    const inner = innerRef.current
+    if (!inner) return
+    let raf = null
+    const measure = () => {
+      offsetsRef.current = measureOffsets(inner)
+      setMeasureTick(t => t + 1)
+    }
+    measure()
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(measure)
+    })
+    ro.observe(inner)
+    return () => { ro.disconnect(); if (raf) cancelAnimationFrame(raf) }
+  }, [selectedCountries])
 
   useEffect(() => {
     const el = scrollRef.current
@@ -127,7 +135,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       if (timer) return
       timer = setTimeout(() => {
         timer = null
-        const year = Math.min(END_YEAR, Math.max(START_YEAR, Math.round(el.scrollTop / parseInt(ROW_HEIGHT)) + START_YEAR))
+        const year = yearAtOffset(offsetsRef.current, el.scrollTop)
         onYearChange(year)
       }, 50)
     }
@@ -172,12 +180,16 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   }
 
   return (
-    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%', background: '#f8f3e7' }}>
+      <div ref={innerRef} style={{ position: 'relative', minWidth: 'fit-content' }}>
+      <WatermarkLayer
+        offsets={offsetsRef.current}
+        contentHeight={innerRef.current?.scrollHeight ?? 0}
+      />
       <div style={{
         display: 'grid',
         gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${selectedCountries.length}, ${COUNTRY_COL_WIDTH})`,
         gridAutoRows: `minmax(${ROW_HEIGHT}, auto)`,
-        minWidth: 'fit-content',
       }}>
 
         {/* Top-left corner cell */}
@@ -185,11 +197,10 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
           position: 'sticky',
           top: 0,
           left: 0,
-          zIndex: 3,
+          zIndex: 5,
           height: HEADER_HEIGHT,
-          background: '#f7f7f7',
-          borderBottom: '2px solid #c8c8c8',
-          borderRight: '1px solid #d0d0d0',
+          background: '#f8f3e7',
+          borderBottom: '1px solid #d8c9a8',
         }} />
 
         {/* Country header cells — sticky must be on the direct grid item */}
@@ -197,10 +208,10 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
           <div key={country.id} style={{
             position: 'sticky',
             top: 0,
-            zIndex: 2,
+            zIndex: 4,
             height: HEADER_HEIGHT,
-            borderBottom: '2px solid #c8c8c8',
-            borderRight: '1px solid #d0d0d0',
+            background: '#f8f3e7',
+            borderBottom: '1px solid #d8c9a8',
           }}>
             <CountryHeader country={country} year={currentYear} />
           </div>
@@ -209,6 +220,13 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         {/* One row per year */}
         <GridRows selectedCountries={selectedCountries} />
 
+      </div>
+      <RibbonLabelLayer
+        offsets={offsetsRef.current}
+        contentHeight={innerRef.current?.scrollHeight ?? 0}
+        selectedCountries={selectedCountries}
+        rulersByCountry={rulersByCountry}
+      />
       </div>
     </div>
   )

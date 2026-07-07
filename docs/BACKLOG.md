@@ -33,14 +33,10 @@ already memoized and isolated in `TimelineGrid.jsx`, so it's the natural seam.
 
 ## Bugs
 
-### B1. Scroll-year badge drifts from visible rows
-`TimelineGrid.jsx` computes the current year as `scrollTop / 28 + START_YEAR`,
-assuming fixed 28px rows — but rows with events are taller (`gridAutoRows:
-minmax(28px, auto)`). Deep in the timeline the visible rows trail the badge/header
-year by several decades (at scroll position "1900" the viewport shows ~1850).
-Pre-existing before v26.3, but worse now that events span five centuries.
-Fix idea: measure cumulative row offsets (or read the year of the row nearest the
-viewport top via `getBoundingClientRect`) instead of assuming fixed height.
+### B1. Scroll-year badge drifts from visible rows — FIXED in v26.5
+`src/rowOffsets.js` measures each year row's real offset (re-measured on resize
+and selection change); the scroll badge, ruler ribbon labels, and century
+watermarks all position from those measurements.
 
 ### B2. Countries vanish from the map after 1700
 The 1730–2000 territory snapshots contain only the Europe six, so the other
