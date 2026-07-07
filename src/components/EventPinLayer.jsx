@@ -1,5 +1,5 @@
 import events from '../data/events.json'
-import { TYPE_COLORS } from './EventCell'
+import { TYPE_COLORS } from '../eventTypeColors'
 
 const W = 800
 const H = 400
