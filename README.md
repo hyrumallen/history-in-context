@@ -1,6 +1,6 @@
 # History in Context
 
-A browser-based timeline of the Early Modern world (1500–1700). Historical events didn't happen in isolation — this app shows 18 countries side by side so you can see what was happening everywhere at once.
+A browser-based timeline of five centuries of history (1500–2000). Historical events didn't happen in isolation — this app shows 18 countries side by side so you can see what was happening everywhere at once. Countries evolve through their successor states as you scroll: the Holy Roman Empire becomes Germany, the Ottoman Empire becomes Turkey.
 
 ## Features
 
@@ -22,9 +22,11 @@ Then open http://localhost:5173.
 
 React 19 + Vite, no backend. All historical data lives in JSON files under `src/data/`:
 
-- `countries.json` — the 18 countries with continent grouping and color palette
-- `monarchs.json` — ruler reigns (shown as shaded bands in each column)
-- `events.json` — 300 dated events with coordinates, descriptions, and links
-- `territories.json` — territorial border polygons at 8 time snapshots (1500–1700)
+- `countries.json` — the 18 countries with continent grouping, color palette, and successor-state eras
+- `rulers.json` — ruler reigns from monarchs to presidents (shown as shaded bands in each column)
+- `events.json` — 500+ dated events with coordinates, descriptions, and links
+- `territories.json` — territorial border polygons at 18 time snapshots (1500–2000)
+
+The six default European countries are populated through 2000; the other twelve currently have data for 1500–1700, with later regional batches to follow.
 
 Design specs and implementation plans are under `docs/superpowers/`.
