@@ -4,7 +4,7 @@ import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
 
-import { START_YEAR, END_YEAR } from '../constants'
+import { START_YEAR, END_YEAR, SERIF } from '../constants'
 import { measureOffsets, yearAtOffset } from '../rowOffsets'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
@@ -74,21 +74,20 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
           position: 'sticky',
           left: 0,
           zIndex: 1,
-          background: '#f7f7f7',
-          borderRight: '1px solid #d0d0d0',
-          borderBottom: '1px solid #ededed',
+          background: '#f8f3e7',
+          borderTop: year % 10 === 0 ? '1px solid #e5d9bd' : 'none',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'flex-end',
           paddingRight: '8px',
-          fontSize: '11px',
-          letterSpacing: '0.2px',
+          fontFamily: SERIF,
           fontVariantNumeric: 'tabular-nums',
-          color: year % 10 === 0 ? '#444' : '#ccc',
-          fontWeight: year % 10 === 0 ? '600' : '400',
+          fontSize: year % 10 === 0 ? '11px' : '9.5px',
+          color: year % 10 === 0 ? '#7a6640' : '#cdbd9a',
+          fontWeight: year % 10 === 0 ? '700' : '400',
         }}
       >
-        {year % 10 === 0 ? year : (year % 5 === 0 ? '·' : '')}
+        {year % 5 === 0 ? year : ''}
       </div>
 
       {/* Country cells */}
@@ -101,9 +100,9 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
             key={`${year}-${country.id}`}
             title={tooltip}
             style={{
-              borderRight: '1px solid #e8e8e8',
-              borderBottom: '1px solid #ededed',
+              borderTop: year % 10 === 0 ? '1px solid #e5d9bd' : 'none',
               background: getRulerBg(year, country),
+              fontFamily: SERIF,
             }}
           >
             {cellEvents.map(event => (
@@ -195,7 +194,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   }
 
   return (
-    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%', background: '#f8f3e7' }}>
       <div ref={innerRef} style={{ position: 'relative', minWidth: 'fit-content' }}>
       <div style={{
         display: 'grid',
@@ -208,11 +207,10 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
           position: 'sticky',
           top: 0,
           left: 0,
-          zIndex: 3,
+          zIndex: 5,
           height: HEADER_HEIGHT,
-          background: '#f7f7f7',
-          borderBottom: '2px solid #c8c8c8',
-          borderRight: '1px solid #d0d0d0',
+          background: '#f8f3e7',
+          borderBottom: '1px solid #d8c9a8',
         }} />
 
         {/* Country header cells — sticky must be on the direct grid item */}
@@ -220,10 +218,10 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
           <div key={country.id} style={{
             position: 'sticky',
             top: 0,
-            zIndex: 2,
+            zIndex: 4,
             height: HEADER_HEIGHT,
-            borderBottom: '2px solid #c8c8c8',
-            borderRight: '1px solid #d0d0d0',
+            background: '#f8f3e7',
+            borderBottom: '1px solid #d8c9a8',
           }}>
             <CountryHeader country={country} year={currentYear} />
           </div>
