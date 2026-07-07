@@ -50,8 +50,10 @@ sync, era headers, country selection all keep working exactly as in v26.4.
 
 ## The reign ribbon
 
-- 15px-wide vertical ribbon at the left edge of every country column, rounded
-  ends, subtle shadow.
+- 15px-wide vertical ribbon at the left edge of every country column. (The
+  mockup's rounded ends and drop shadow are dropped: per-cell painting cannot
+  round individual reign ends, and a decorative overlay faking it isn't worth
+  the complexity. Square-ended strips.)
 - **Painted per year-cell** (each cell draws its reign's color on its left
   strip) so alignment with variable-height rows is automatic — segments can
   never drift (concern 2).
