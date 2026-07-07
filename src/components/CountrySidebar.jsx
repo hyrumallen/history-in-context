@@ -25,8 +25,8 @@ export default function CountrySidebar({ countries, selectedIds, onChange, open 
       width: open ? 230 : 0,
       flexShrink: 0,
       overflow: 'hidden',
-      background: '#f7f7f8',
-      borderLeft: open ? '1px solid #c8c8c8' : 'none',
+      background: '#f8f3e7',
+      borderLeft: open ? '1px solid #d8c9a8' : 'none',
     }}>
       <div style={{
         width: 230,

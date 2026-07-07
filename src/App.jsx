@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import countries from './data/countries.json'
-import { START_YEAR, END_YEAR } from './constants'
+import { START_YEAR, END_YEAR, SERIF } from './constants'
 import TimelineGrid from './components/TimelineGrid'
 import CountrySidebar from './components/CountrySidebar'
 import EventHoverCard from './components/EventHoverCard'
@@ -27,9 +27,9 @@ const MINI_PANEL_STYLE = {
   bottom: 18,
   width: 380,
   height: 210,
-  border: '2px solid #1a1a2e',
+  border: '2px solid #4a3a22',
   borderRadius: 8,
-  boxShadow: '0 6px 24px rgba(26, 26, 46, 0.35)',
+  boxShadow: '0 6px 24px rgba(74, 58, 34, 0.35)',
   overflow: 'hidden',
   cursor: 'zoom-in',
   zIndex: 10,
@@ -130,7 +130,7 @@ function App() {
         flexShrink: 0,
         height: '52px',
       }}>
-        <span style={{ fontSize: '20px', fontWeight: '700', letterSpacing: '-0.3px' }}>
+        <span style={{ fontFamily: SERIF, fontSize: '20px', fontWeight: '700', letterSpacing: '0.2px' }}>
           History in Context
         </span>
         <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
