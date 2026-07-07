@@ -3,6 +3,7 @@ import countries from './data/countries.json'
 import { START_YEAR, END_YEAR } from './constants'
 import TimelineGrid from './components/TimelineGrid'
 import CountrySidebar from './components/CountrySidebar'
+import EventHoverCard from './components/EventHoverCard'
 import WorldMap from './components/WorldMap'
 
 const DEFAULT_IDS = ['england', 'france', 'spain', 'holy-roman-empire', 'russia', 'ottoman-empire']
@@ -185,6 +186,8 @@ function App() {
           onChange={setSelectedIds}
           open={sidebarOpen}
         />
+
+        <EventHoverCard />
       </div>
     </div>
   )
