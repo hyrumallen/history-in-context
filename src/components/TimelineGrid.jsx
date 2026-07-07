@@ -1,10 +1,11 @@
-import { useRef, useEffect, memo, Fragment } from 'react'
+import { useRef, useEffect, useState, memo, Fragment } from 'react'
 import events from '../data/events.json'
 import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
 import EventCell from './EventCell'
 
 import { START_YEAR, END_YEAR } from '../constants'
+import { measureOffsets, yearAtOffset } from '../rowOffsets'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
@@ -68,6 +69,7 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
       {/* Year label */}
       <div
         key={`y-${year}`}
+        data-year-row={year}
         style={{
           position: 'sticky',
           left: 0,
@@ -118,6 +120,27 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
 
 export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
   const scrollRef = useRef(null)
+  const innerRef = useRef(null)
+  const offsetsRef = useRef([])
+  const [measureTick, setMeasureTick] = useState(0)
+  void measureTick
+
+  useEffect(() => {
+    const inner = innerRef.current
+    if (!inner) return
+    let raf = null
+    const measure = () => {
+      offsetsRef.current = measureOffsets(inner)
+      setMeasureTick(t => t + 1)
+    }
+    measure()
+    const ro = new ResizeObserver(() => {
+      if (raf) cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(measure)
+    })
+    ro.observe(inner)
+    return () => { ro.disconnect(); if (raf) cancelAnimationFrame(raf) }
+  }, [selectedCountries])
 
   useEffect(() => {
     const el = scrollRef.current
@@ -127,7 +150,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       if (timer) return
       timer = setTimeout(() => {
         timer = null
-        const year = Math.min(END_YEAR, Math.max(START_YEAR, Math.round(el.scrollTop / parseInt(ROW_HEIGHT)) + START_YEAR))
+        const year = yearAtOffset(offsetsRef.current, el.scrollTop)
         onYearChange(year)
       }, 50)
     }
@@ -173,11 +196,11 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
 
   return (
     <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%' }}>
+      <div ref={innerRef} style={{ position: 'relative', minWidth: 'fit-content' }}>
       <div style={{
         display: 'grid',
         gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${selectedCountries.length}, ${COUNTRY_COL_WIDTH})`,
         gridAutoRows: `minmax(${ROW_HEIGHT}, auto)`,
-        minWidth: 'fit-content',
       }}>
 
         {/* Top-left corner cell */}
@@ -209,6 +232,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         {/* One row per year */}
         <GridRows selectedCountries={selectedCountries} />
 
+      </div>
       </div>
     </div>
   )
