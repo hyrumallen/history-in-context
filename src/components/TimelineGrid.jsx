@@ -1,4 +1,4 @@
-import { useRef, useEffect, memo } from 'react'
+import { useRef, useEffect, memo, Fragment } from 'react'
 import events from '../data/events.json'
 import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
@@ -64,7 +64,7 @@ function getRulerBg(year, country) {
 // not the 501-row grid body.
 const GridRows = memo(function GridRows({ selectedCountries }) {
   return YEARS.map(year => (
-    <>
+    <Fragment key={year}>
       {/* Year label */}
       <div
         key={`y-${year}`}
@@ -112,7 +112,7 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
           </div>
         )
       })}
-    </>
+    </Fragment>
   ))
 })
 
