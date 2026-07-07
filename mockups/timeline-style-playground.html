@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Timeline Style Playground</title>
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: 'Inter', system-ui, 'Segoe UI', sans-serif;
+    background: #23233a;
+    color: #e8e8f0;
+    padding: 28px 32px 48px;
+  }
+  h1 { font-size: 22px; letter-spacing: -0.3px; }
+  .sub { color: #9999bb; font-size: 13px; margin: 6px 0 26px; max-width: 900px; line-height: 1.5; }
+  .row { display: flex; gap: 22px; align-items: flex-start; overflow-x: auto; padding-bottom: 12px; }
+  .panel { flex: 0 0 360px; }
+  .panel h2 { font-size: 14px; margin-bottom: 2px; }
+  .panel .tag { font-size: 11px; color: #9999bb; margin-bottom: 10px; line-height: 1.5; min-height: 50px; }
+  .frame {
+    background: white; color: #1a1a1a; border-radius: 10px; overflow: hidden;
+    height: 560px; box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    position: relative;
+  }
+
+  /* ============ PANEL 0: CURRENT ============ */
+  .cur { display: grid; grid-template-columns: 46px 1fr 1fr; font-size: 10.5px; }
+  .cur .hd { height: 40px; display:flex; align-items:center; justify-content:center; font-weight:600; font-size: 11px; color:#1a1a2e; border-bottom: 2px solid #c8c8c8; border-right: 1px solid #d0d0d0; }
+  .cur .corner { background:#f7f7f7; border-bottom: 2px solid #c8c8c8; border-right: 1px solid #d0d0d0; }
+  .cur .yr { background:#f7f7f7; border-right:1px solid #d0d0d0; border-bottom:1px solid #ededed; display:flex; align-items:center; justify-content:flex-end; padding-right:6px; color:#ccc; height: 24px; font-variant-numeric: tabular-nums; }
+  .cur .yr.dec { color:#444; font-weight:600; }
+  .cur .c { border-right:1px solid #e8e8e8; border-bottom:1px solid #ededed; padding: 1px 5px; }
+  .cur .ev { display:flex; gap:4px; align-items:flex-start; line-height:1.35; }
+  .cur .dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; margin-top:3px; }
+  .cur .y { color:#aaa; margin-right: 3px; }
+
+  /* ============ PANEL A: EDITORIAL MINIMAL ============ */
+  .edi { display: grid; grid-template-columns: 46px 1fr 1fr; font-size: 10.5px; background: #fdfdfd; }
+  .edi .hd { height: 44px; display:flex; align-items:center; justify-content:center; gap: 6px; font-weight:600; font-size: 11.5px; color:#2a2a3e; }
+  .edi .hd .swatch { width: 8px; height: 8px; border-radius: 2px; }
+  .edi .corner { }
+  .edi .yr { display:flex; align-items:flex-start; justify-content:flex-end; padding-right:10px; color:#c5c5cf; height: 24px; font-variant-numeric: tabular-nums; font-size: 10px; }
+  .edi .yr.dec { color:#55556a; font-weight:600; font-size: 11px; }
+  .edi .rule { border-top: 1px solid #ececf2; }
+  .edi .c { padding: 1px 8px 1px 0; position: relative; }
+  .edi .col-en { border-left: 3px solid #7d97b1; padding-left: 8px; background: rgba(125,151,177,0.05); }
+  .edi .col-fr { border-left: 3px solid #7fae8d; padding-left: 8px; background: rgba(127,174,141,0.05); }
+  .edi .chip {
+    background: white; border: 1px solid #e6e6ee; border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(26,26,46,0.08);
+    padding: 3px 7px; line-height: 1.35; display: inline-block; margin: 1px 0;
+  }
+  .edi .chip .y { color:#b0b0bc; margin-right: 4px; font-size: 9.5px; }
+  .edi .ic { margin-right: 3px; font-size: 9px; }
+  .edi .reignline { position: relative; height: 14px; }
+  .edi .reignline span {
+    position: absolute; left: 0; top: 0; font-size: 8.5px; letter-spacing: 0.8px;
+    text-transform: uppercase; color: #9a9aae; font-weight: 600;
+  }
+
+  /* ============ PANEL B: HISTORICAL ATLAS ============ */
+  .atlas {
+    background: #f8f3e7; height: 100%; position: relative; overflow: hidden;
+    display: grid; grid-template-columns: 46px 1fr 1fr; font-size: 10.5px;
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  }
+  .atlas .watermark {
+    position: absolute; top: 205px; left: 0; right: 0; text-align: center;
+    font-size: 110px; color: rgba(120, 96, 60, 0.07); font-weight: 700;
+    pointer-events: none; letter-spacing: 8px;
+  }
+  .atlas .hd { height: 48px; display:flex; flex-direction: column; align-items:center; justify-content:center; border-bottom: 1px solid #d8c9a8; }
+  .atlas .hd .nm { font-size: 13px; color: #4a3a22; letter-spacing: 0.5px; }
+  .atlas .hd .era { font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #a08c62; margin-top: 1px; }
+  .atlas .yr { display:flex; align-items:flex-start; justify-content:flex-end; padding-right:9px; color:#c9b econ; height: 24px; color: #cbb econ; }
+  .atlas .yr { color: #cdbd9a; font-size: 9.5px; }
+  .atlas .yr.dec { color:#7a6640; font-weight:700; font-size: 11px; }
+  .atlas .c { padding: 1px 8px; position: relative; }
+  .atlas .rband { position: absolute; left: 2px; top: 0; bottom: 0; width: 5px; border-radius: 2px; }
+  .atlas .ev { padding-left: 12px; line-height: 1.4; }
+  .atlas .ev .y { color: #a08c62; font-style: italic; margin-right: 4px; font-size: 9.5px; }
+  .atlas .ruler {
+    padding-left: 12px; font-size: 8.5px; letter-spacing: 2px; text-transform: uppercase;
+    color: #8a7550; margin-top: 2px;
+  }
+  .atlas .rule-dec { border-top: 1px solid #e5d9bd; }
+
+  /* ============ PANEL C: RIBBON RIVER ============ */
+  .rib { background: #fbfbfd; height: 100%; position: relative; font-size: 10.5px; padding: 0 10px; }
+  .rib .lane { position: absolute; top: 0; bottom: 0; width: 170px; }
+  .rib .lane.en { left: 12px; }
+  .rib .lane.fr { right: 12px; }
+  .rib .lane .nm { text-align: center; font-weight: 600; font-size: 11.5px; padding: 12px 0 6px; color: #2a2a3e; }
+  .rib .spine { position: absolute; top: 42px; bottom: 10px; left: 50%; width: 14px; transform: translateX(-50%); border-radius: 7px; overflow: hidden; display: flex; flex-direction: column; }
+  .rib .seg { width: 100%; }
+  .rib .card {
+    position: absolute; width: 72px; background: white; border: 1px solid #e6e6ee;
+    border-radius: 6px; box-shadow: 0 1px 4px rgba(26,26,46,0.10);
+    padding: 3px 6px; line-height: 1.3; font-size: 9px;
+  }
+  .rib .card .y { color: #b0b0bc; display: block; font-size: 8.5px; }
+  .rib .card.l { right: calc(50% + 14px); text-align: right; }
+  .rib .card.r { left: calc(50% + 14px); }
+  .rib .card::after {
+    content: ''; position: absolute; top: 50%; width: 8px; height: 1px; background: #ccccdd;
+  }
+  .rib .card.l::after { right: -8px; }
+  .rib .card.r::after { left: -8px; }
+  .rib .rl { position: absolute; left: 50%; transform: translateX(-50%) rotate(0); writing-mode: vertical-rl; font-size: 8px; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.9); font-weight: 600; }
+  .rib .yaxis { position: absolute; left: 50%; transform: translateX(-50%); top: 42px; bottom: 10px; width: 1px; }
+  .rib .ytick { position: absolute; left: 50%; transform: translateX(-50%); font-size: 9px; color: #9999aa; background:#fbfbfd; padding: 0 3px; font-variant-numeric: tabular-nums; }
+  .note { font-size: 11px; color: #9999bb; margin-top: 10px; line-height: 1.5; }
+
+  /* ============ PANEL D: HYBRID B + C ============ */
+  .hyb {
+    background: #f8f3e7; height: 100%; display: flex; position: relative; overflow: hidden;
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif; font-size: 10.5px;
+  }
+  .hyb .watermark {
+    position: absolute; top: 205px; left: 0; right: 0; text-align: center;
+    font-size: 110px; color: rgba(120, 96, 60, 0.07); font-weight: 700;
+    pointer-events: none; letter-spacing: 8px;
+  }
+  .hyb .gut { width: 42px; flex-shrink: 0; }
+  .hyb .ghd { height: 48px; }
+  .hyb .gcell { height: 24px; display: flex; align-items: flex-start; justify-content: flex-end; padding-right: 8px; color: #cdbd9a; font-size: 9.5px; font-variant-numeric: tabular-nums; }
+  .hyb .gcell.dec { color: #7a6640; font-weight: 700; font-size: 11px; border-top: 1px solid #e5d9bd; }
+  .hyb .col { flex: 1; position: relative; }
+  .hyb .hd { height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; border-bottom: 1px solid #d8c9a8; }
+  .hyb .hd .nm { font-size: 13px; color: #4a3a22; letter-spacing: 0.5px; }
+  .hyb .hd .era { font-size: 8.5px; letter-spacing: 1.5px; text-transform: uppercase; color: #a08c62; margin-top: 1px; }
+  .hyb .spine {
+    position: absolute; left: 8px; top: 53px; bottom: 6px; width: 15px; border-radius: 8px;
+    overflow: hidden; display: flex; flex-direction: column;
+    box-shadow: 0 1px 3px rgba(90, 70, 40, 0.25);
+  }
+  .hyb .seg { width: 100%; display: flex; align-items: center; justify-content: center; }
+  .hyb .rl { writing-mode: vertical-rl; font-size: 8px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,0.95); font-weight: 700; }
+  .hyb .r { height: 24px; padding-left: 34px; padding-right: 6px; line-height: 1.35; white-space: nowrap; overflow: visible; }
+  .hyb .r.dec { border-top: 1px solid #e5d9bd; }
+  .hyb .r .y { color: #a08c62; font-style: italic; margin-right: 4px; font-size: 9.5px; }
+</style>
+</head>
+<body>
+  <h1>Timeline Style Playground</h1>
+  <p class="sub">Four takes on the same content — England and France, 1700–1720. The goal: keep the grid's
+  scannability (one column per country, one row per year) while shedding the spreadsheet look.
+  Panels are static sketches, not pixel-final.</p>
+
+  <div class="row">
+
+    <!-- ================= D: HYBRID B + C ================= -->
+    <div class="panel">
+      <h2>D · Hybrid: atlas + ruler ribbon</h2>
+      <div class="tag">B's warm paper, serif events, and era headers — with C's reign ribbon moved to the left edge of each column, ruler names lettered vertically inside it. Reign changes are where the ribbon shade shifts.</div>
+      <div class="frame">
+        <div class="hyb">
+          <div class="watermark">1700</div>
+          <div class="gut">
+            <div class="ghd"></div>
+            <div class="gcell dec">1700</div>
+            <div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div>
+            <div class="gcell">1705</div>
+            <div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div>
+            <div class="gcell dec">1710</div>
+            <div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div>
+            <div class="gcell">1715</div>
+            <div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div><div class="gcell">&nbsp;</div>
+            <div class="gcell dec">1720</div>
+          </div>
+          <div class="col">
+            <div class="hd"><span class="nm">England</span><span class="era">Great Britain from 1707</span></div>
+            <div class="spine">
+              <div class="seg" style="height:9.5%; background:#7d97b1"></div>
+              <div class="seg" style="height:57%; background:#a5b8cb"><span class="rl">Anne</span></div>
+              <div class="seg" style="height:33.5%; background:#7d97b1"><span class="rl">George I</span></div>
+            </div>
+            <div class="r dec">&nbsp;</div>
+            <div class="r"><span class="y">1701</span>Act of Settlement</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r"><span class="y">1707</span>Acts of Union</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r dec">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r"><span class="y">1714</span>George I crowned</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r dec">&nbsp;</div>
+          </div>
+          <div class="col">
+            <div class="hd"><span class="nm">France</span><span class="era">Kingdom of France</span></div>
+            <div class="spine">
+              <div class="seg" style="height:71%; background:#7fae8d"><span class="rl">Louis XIV</span></div>
+              <div class="seg" style="height:29%; background:#a3c9ae"><span class="rl">Louis XV</span></div>
+            </div>
+            <div class="r dec">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r"><span class="y">1704</span>Defeat at Blenheim</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r dec">&nbsp;</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r"><span class="y">1715</span>Death of Louis XIV</div>
+            <div class="r">&nbsp;</div><div class="r">&nbsp;</div><div class="r">&nbsp;</div>
+            <div class="r">&nbsp;</div>
+            <div class="r dec"><span class="y">1720</span>Mississippi Bubble</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CURRENT ================= -->
+    <div class="panel">
+      <h2>Current (baseline)</h2>
+      <div class="tag">Full cell borders both directions, solid header blocks, grey year gutter, flat column washes — the Excel signals.</div>
+      <div class="frame">
+        <div class="cur">
+          <div class="corner"></div>
+          <div class="hd" style="background:#7d97b1">England</div>
+          <div class="hd" style="background:#7fae8d">France</div>
+
+          <div class="yr dec">1700</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1701</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"><div class="ev"><span class="dot" style="background:#888"></span><span><span class="y">1701</span>Act of Settlement ↗</span></div></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1702</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1703</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1704</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"><div class="ev"><span class="dot" style="background:#c0392b"></span><span><span class="y">1704</span>Defeat at Blenheim ↗</span></div></div>
+          <div class="yr">1705</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1706</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1707</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"><div class="ev"><span class="dot" style="background:#888"></span><span><span class="y">1707</span>Acts of Union create Great Britain ↗</span></div></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1708</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1709</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr dec">1710</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1711</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1712</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1713</div>
+          <div class="c" style="background:rgba(200,216,232,0.3)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1714</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"><div class="ev"><span class="dot" style="background:#c9a227"></span><span><span class="y">1714</span>George I begins the Hanoverian dynasty ↗</span></div></div>
+          <div class="c" style="background:rgba(200,232,208,0.3)"></div>
+          <div class="yr">1715</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"><div class="ev"><span class="dot" style="background:#7f8c8d"></span><span><span class="y">1715</span>Death of Louis XIV ↗</span></div></div>
+          <div class="yr">1716</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"></div>
+          <div class="yr">1717</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"></div>
+          <div class="yr">1718</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"></div>
+          <div class="yr">1719</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"></div>
+          <div class="yr dec">1720</div>
+          <div class="c" style="background:rgba(200,216,232,0.65)"></div>
+          <div class="c" style="background:rgba(200,232,208,0.65)"><div class="ev"><span class="dot" style="background:#888"></span><span><span class="y">1720</span>Mississippi Bubble collapses ↗</span></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= A: EDITORIAL MINIMAL ================= -->
+    <div class="panel">
+      <h2>A · Editorial minimal</h2>
+      <div class="tag">No vertical borders; hairline rules at decades only. Events are floating chips with type icons. Country color reduced to an edge stripe + 5% tint. Reign changes marked by small-caps labels, not blocks.</div>
+      <div class="frame">
+        <div class="edi">
+          <div class="corner"></div>
+          <div class="hd"><span class="swatch" style="background:#7d97b1"></span>England</div>
+          <div class="hd"><span class="swatch" style="background:#7fae8d"></span>France</div>
+
+          <div class="yr dec rule">1700</div>
+          <div class="c col-en rule"></div>
+          <div class="c col-fr rule"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"><span class="chip"><span class="ic">📜</span><span class="y">1701</span>Act of Settlement</span></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"><div class="reignline"><span>⚜ Anne · 1702</span></div></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"><span class="chip"><span class="ic">⚔️</span><span class="y">1704</span>Defeat at Blenheim</span></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"><span class="chip"><span class="ic">📜</span><span class="y">1707</span>Acts of Union — Great Britain</span></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr dec rule">1710</div>
+          <div class="c col-en rule"></div>
+          <div class="c col-fr rule"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"><span class="chip"><span class="ic">👑</span><span class="y">1714</span>George I — Hanoverians</span><div class="reignline"><span>⚜ George I · 1714</span></div></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"><span class="chip"><span class="ic">🕯</span><span class="y">1715</span>Death of Louis XIV</span><div class="reignline"><span>⚜ Louis XV · 1715</span></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c col-en"></div>
+          <div class="c col-fr"></div>
+          <div class="yr dec rule">1720</div>
+          <div class="c col-en rule"></div>
+          <div class="c col-fr rule"><span class="chip"><span class="ic">📉</span><span class="y">1720</span>Mississippi Bubble collapses</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= B: HISTORICAL ATLAS ================= -->
+    <div class="panel">
+      <h2>B · Historical atlas</h2>
+      <div class="tag">Everything from A, plus character: warm paper ground, serif type, era names under country names, reign bands as slim ribbons on the column edge, and a faint century watermark behind the content.</div>
+      <div class="frame">
+        <div class="atlas">
+          <div class="watermark">1700</div>
+          <div class="hd" style="grid-column: 1"></div>
+          <div class="hd"><span class="nm">England</span><span class="era">Great Britain from 1707</span></div>
+          <div class="hd"><span class="nm">France</span><span class="era">Kingdom of France</span></div>
+
+          <div class="yr dec rule-dec">1700</div>
+          <div class="c rule-dec"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c rule-dec"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div><div class="ev"><span class="y">1701</span>Act of Settlement</div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div><div class="ruler">Anne</div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div><div class="ev"><span class="y">1704</span>Defeat at Blenheim</div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div><div class="ev"><span class="y">1707</span>Acts of Union create Great Britain</div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr dec rule-dec">1710</div>
+          <div class="c rule-dec"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c rule-dec"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#a5b8cb"></div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div><div class="ev"><span class="y">1714</span>George I begins the Hanoverian dynasty</div><div class="ruler">George I</div></div>
+          <div class="c"><div class="rband" style="background:#7fae8d"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c"><div class="rband" style="background:#a3c9ae"></div><div class="ev"><span class="y">1715</span>Death of Louis XIV</div><div class="ruler">Louis XV</div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c"><div class="rband" style="background:#a3c9ae"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c"><div class="rband" style="background:#a3c9ae"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c"><div class="rband" style="background:#a3c9ae"></div></div>
+          <div class="yr">&nbsp;</div>
+          <div class="c"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c"><div class="rband" style="background:#a3c9ae"></div></div>
+          <div class="yr dec rule-dec">1720</div>
+          <div class="c rule-dec"><div class="rband" style="background:#7d97b1"></div></div>
+          <div class="c rule-dec"><div class="rband" style="background:#a3c9ae"></div><div class="ev"><span class="y">1720</span>Mississippi Bubble collapses</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= C: RIBBON RIVER ================= -->
+    <div class="panel">
+      <h2>C · Ribbon river</h2>
+      <div class="tag">Each country is a reign-colored ribbon; events branch off as cards, alternating sides. Most striking, biggest rewrite, and hardest to keep readable with many countries selected.</div>
+      <div class="frame">
+        <div class="rib">
+          <div class="lane en">
+            <div class="nm">England</div>
+            <div class="spine">
+              <div class="seg" style="height:12%; background:#7d97b1"></div>
+              <div class="seg" style="height:56%; background:#a5b8cb"></div>
+              <div class="seg" style="height:32%; background:#7d97b1"></div>
+            </div>
+            <div class="rl" style="top:120px">Anne</div>
+            <div class="rl" style="top:400px; color:rgba(255,255,255,0.95)">George I</div>
+            <div class="card l" style="top:65px"><span class="y">1701</span>Act of Settlement</div>
+            <div class="card r" style="top:170px"><span class="y">1707</span>Acts of Union — Great Britain</div>
+            <div class="card l" style="top:360px"><span class="y">1714</span>George I — Hanoverian dynasty</div>
+          </div>
+          <div class="lane fr">
+            <div class="nm">France</div>
+            <div class="spine">
+              <div class="seg" style="height:72%; background:#7fae8d"></div>
+              <div class="seg" style="height:28%; background:#a3c9ae"></div>
+            </div>
+            <div class="rl" style="top:100px">Louis XIV</div>
+            <div class="rl" style="top:420px; color:#5d8a6b">Louis XV</div>
+            <div class="card l" style="top:110px"><span class="y">1704</span>Defeat at Blenheim</div>
+            <div class="card r" style="top:355px"><span class="y">1715</span>Death of Louis XIV</div>
+            <div class="card l" style="top:470px"><span class="y">1720</span>Mississippi Bubble collapses</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note">A is a CSS-only change to the existing grid (lowest effort, keeps everything working — hover cards, scroll sync, era headers).
+  B = A + typography and texture (still no structural change). C restructures the rendering entirely and interacts badly with 9+ selected columns.
+  A and B can also be combined: A's structure with B's type and paper tone.</p>
+</body>
+</html>
