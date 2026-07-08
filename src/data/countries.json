@@ -82,10 +82,36 @@
       { "name": "People's Republic",              "startYear": 1945, "endYear": 1989 },
       { "name": "Republic of Poland",             "startYear": 1989, "endYear": 2000 }
     ] },
-  { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47" },
-  { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261" },
-  { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40" },
-  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c" },
+  { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47",
+    "eras": [
+      { "name": "Ming Dynasty",               "startYear": 1500, "endYear": 1644 },
+      { "name": "Qing Dynasty",               "startYear": 1644, "endYear": 1912 },
+      { "name": "Republic of China",          "startYear": 1912, "endYear": 1949 },
+      { "name": "People's Republic of China", "startYear": 1949, "endYear": 2000 }
+    ] },
+  { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261",
+    "eras": [
+      { "name": "Sengoku Era",      "startYear": 1500, "endYear": 1573 },
+      { "name": "Azuchi-Momoyama",  "startYear": 1573, "endYear": 1603 },
+      { "name": "Edo (Tokugawa)",   "startYear": 1603, "endYear": 1868 },
+      { "name": "Empire of Japan",  "startYear": 1868, "endYear": 1947 },
+      { "name": "Japan",            "startYear": 1947, "endYear": 2000 }
+    ] },
+  { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40",
+    "eras": [
+      { "name": "Delhi Sultanate",   "startYear": 1500, "endYear": 1526 },
+      { "name": "Mughal Empire",     "startYear": 1526, "endYear": 1858 },
+      { "name": "British Raj",       "startYear": 1858, "endYear": 1947 },
+      { "name": "Republic of India", "startYear": 1947, "endYear": 2000 }
+    ] },
+  { "id": "safavid-persia", "name": "Safavid Persia", "continent": "Asia & Middle East", "color": "#c9e0e6", "mapColor": "#5f9fb0", "mapStroke": "#457d8c",
+    "eras": [
+      { "name": "Safavid Persia",           "startYear": 1500, "endYear": 1736 },
+      { "name": "Afsharid & Zand Persia",   "startYear": 1736, "endYear": 1796 },
+      { "name": "Qajar Persia",             "startYear": 1796, "endYear": 1925 },
+      { "name": "Pahlavi Iran",             "startYear": 1925, "endYear": 1979 },
+      { "name": "Islamic Republic of Iran", "startYear": 1979, "endYear": 2000 }
+    ] },
   { "id": "songhai", "name": "Songhai Empire", "continent": "Africa", "color": "#e6d5bd", "mapColor": "#a1743f", "mapStroke": "#7d5a30" },
   { "id": "ethiopia", "name": "Ethiopia", "continent": "Africa", "color": "#dde3c8", "mapColor": "#8a9a5b", "mapStroke": "#6b7845" },
   { "id": "aztec", "name": "Aztec Empire", "continent": "Americas", "color": "#dcd2e8", "mapColor": "#8b7bb5", "mapStroke": "#6c5f91" },
