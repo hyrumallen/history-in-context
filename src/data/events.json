@@ -7929,5 +7929,16 @@
     "link": "https://en.wikipedia.org/wiki/Amir_Kabir",
     "lat": 35.69,
     "lng": 51.42
+  },
+  {
+    "id": "e722",
+    "year": 1804,
+    "countryId": "china",
+    "type": "war",
+    "title": "White Lotus Rebellion crushed",
+    "description": "Nine years of campaigning finally broke the rebellion, at a cost of 120 million taels — five years of imperial revenue — and the Qing military's reputation.",
+    "link": "https://en.wikipedia.org/wiki/White_Lotus_Rebellion",
+    "lat": 32.0,
+    "lng": 108.0
   }
 ]
