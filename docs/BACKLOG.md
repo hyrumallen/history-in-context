@@ -4,12 +4,11 @@ Features and known bugs, in rough priority order. Updated 2026-07-06 (post v26.3
 
 ## Features
 
-### F1. Europe remainder batch (1700–2000)
-Portugal, Dutch Republic, Sweden, Poland-Lithuania are still 1500–1700 only.
-Needs eras (Dutch Republic → Batavian Republic → Netherlands; Poland-Lithuania →
-partitions → Second Republic → People's Republic → Poland), rulers, events, and
-inclusion in the ten 1730–2000 territory snapshots. Follows the v26.3 pattern;
-the data-validation suite (`npm test`) guards the additions.
+### F1. Europe remainder batch (1700–2000) — DONE in v26.6
+Portugal, Netherlands, Sweden, and Poland populated to 2000 (eras, rulers,
+events, territory snapshots). Poland's partition era (1795–1918) keeps events
+and an era label but no rulers and no map presence — the approved treatment
+for long statelessness.
 
 ### F2. Asia & Middle East batch (1700–2000)
 China (Qing → Republic → People's Republic), Japan (Tokugawa → Meiji → modern),
@@ -39,10 +38,10 @@ and selection change); the scroll badge, ruler ribbon labels, and century
 watermarks all position from those measurements.
 
 ### B2. Countries vanish from the map after 1700
-The 1730–2000 territory snapshots contain only the Europe six, so the other
-twelve disappear from the map past the 1700 snapshot. Intentional until their
-batches land (stale borders were judged worse than absence), but it can read as
-a bug. Resolved incrementally by F1–F3.
+The 1730–2000 snapshots now cover all ten European countries (v26.6); the
+eight Asia/Africa/Americas countries still disappear past 1700 until F2–F3
+land. Intentional (stale borders were judged worse than absence), but it can
+read as a bug.
 
 ### B3. EventCell fast-refresh lint warning — FIXED in v26.4
 `TYPE_COLORS` moved to `src/eventTypeColors.js` as part of the Wikipedia hover
