@@ -27,6 +27,6 @@ React 19 + Vite, no backend. All historical data lives in JSON files under `src/
 - `events.json` — 500+ dated events with coordinates, descriptions, and links
 - `territories.json` — territorial border polygons at 18 time snapshots (1500–2000)
 
-The six default European countries are populated through 2000; the other twelve currently have data for 1500–1700, with later regional batches to follow.
+All 18 countries are populated across the full 1500–2000 range, evolving through their successor states (Holy Roman Empire → Germany, Aztec Empire → Mexico, Songhai → Mali). Colonial and stateless periods show events under an era label with no ruler — history keeps happening even when the state is gone.
 
 Design specs and implementation plans are under `docs/superpowers/`.

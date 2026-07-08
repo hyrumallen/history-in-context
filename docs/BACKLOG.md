@@ -16,10 +16,11 @@ the Poland treatment (era "British Raj", events continue, bare ribbon, absent
 from map 1820–1940); China's warlord era and Persia's interregna are bare-ribbon
 gaps; Deng Xiaoping and Iran's Supreme Leaders follow the de-facto-heads rule.
 
-### F3. Africa & Americas batch (1700–2000)
-Ethiopia continues to 2000 (Empire → Derg → Federal Republic). Decide whether
-ended countries get successor eras: Songhai (ended 1591), Aztec (→ New Spain →
-Mexico?), Inca (→ Peru?). If they stay ended, only Ethiopia needs data.
+### F3. Africa & Americas batch (1700–2000) — DONE in v26.8
+All three ended empires continue through successor eras (Songhai → Mali,
+Aztec → Mexico, Inca → Peru), with colonial eras getting the Poland treatment.
+Ethiopia runs continuously with a bare-ribbon Zemene Mesafint. Every column
+now reaches 2000.
 
 ### F4. New countries beyond the original 18
 Candidates that only exist post-1700: United States, Brazil, Italy, Austria
@@ -38,10 +39,9 @@ already memoized and isolated in `TimelineGrid.jsx`, so it's the natural seam.
 and selection change); the scroll badge, ruler ribbon labels, and century
 watermarks all position from those measurements.
 
-### B2. Countries vanish from the map after 1700
-The 1730–2000 snapshots now cover fourteen countries (v26.7); only the four
-Africa/Americas countries (Songhai, Ethiopia, Aztec, Inca) still end at 1700
-pending F3 — and three of those ended as states before 1700 anyway.
+### B2. Countries vanish from the map after 1700 — RESOLVED in v26.8
+All 18 columns now appear on the map through 2000 (colonial/stateless periods
+intentionally absent per the Poland rule).
 
 ### B3. EventCell fast-refresh lint warning — FIXED in v26.4
 `TYPE_COLORS` moved to `src/eventTypeColors.js` as part of the Wikipedia hover

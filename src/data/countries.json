@@ -112,8 +112,30 @@
       { "name": "Pahlavi Iran",             "startYear": 1925, "endYear": 1979 },
       { "name": "Islamic Republic of Iran", "startYear": 1979, "endYear": 2000 }
     ] },
-  { "id": "songhai", "name": "Songhai Empire", "continent": "Africa", "color": "#e6d5bd", "mapColor": "#a1743f", "mapStroke": "#7d5a30" },
-  { "id": "ethiopia", "name": "Ethiopia", "continent": "Africa", "color": "#dde3c8", "mapColor": "#8a9a5b", "mapStroke": "#6b7845" },
-  { "id": "aztec", "name": "Aztec Empire", "continent": "Americas", "color": "#dcd2e8", "mapColor": "#8b7bb5", "mapStroke": "#6c5f91" },
-  { "id": "inca", "name": "Inca Empire", "continent": "Americas", "color": "#e2cfdc", "mapColor": "#8f5f7f", "mapStroke": "#714a64" }
+  { "id": "songhai", "name": "Songhai Empire", "continent": "Africa", "color": "#e6d5bd", "mapColor": "#a1743f", "mapStroke": "#7d5a30",
+    "eras": [
+      { "name": "Songhai Empire",              "startYear": 1500, "endYear": 1591 },
+      { "name": "Pashalik of Timbuktu",        "startYear": 1591, "endYear": 1818 },
+      { "name": "Massina & Toucouleur Empires","startYear": 1818, "endYear": 1893 },
+      { "name": "French Sudan",                "startYear": 1893, "endYear": 1960 },
+      { "name": "Republic of Mali",            "startYear": 1960, "endYear": 2000 }
+    ] },
+  { "id": "ethiopia", "name": "Ethiopia", "continent": "Africa", "color": "#dde3c8", "mapColor": "#8a9a5b", "mapStroke": "#6b7845",
+    "eras": [
+      { "name": "Ethiopian Empire",            "startYear": 1500, "endYear": 1974 },
+      { "name": "Derg Ethiopia",               "startYear": 1974, "endYear": 1991 },
+      { "name": "Federal Democratic Republic", "startYear": 1991, "endYear": 2000 }
+    ] },
+  { "id": "aztec", "name": "Aztec Empire", "continent": "Americas", "color": "#dcd2e8", "mapColor": "#8b7bb5", "mapStroke": "#6c5f91",
+    "eras": [
+      { "name": "Aztec Empire", "startYear": 1500, "endYear": 1521 },
+      { "name": "New Spain",    "startYear": 1521, "endYear": 1821 },
+      { "name": "Mexico",       "startYear": 1821, "endYear": 2000 }
+    ] },
+  { "id": "inca", "name": "Inca Empire", "continent": "Americas", "color": "#e2cfdc", "mapColor": "#8f5f7f", "mapStroke": "#714a64",
+    "eras": [
+      { "name": "Inca Empire",         "startYear": 1500, "endYear": 1572 },
+      { "name": "Viceroyalty of Peru", "startYear": 1572, "endYear": 1821 },
+      { "name": "Republic of Peru",    "startYear": 1821, "endYear": 2000 }
+    ] }
 ]
