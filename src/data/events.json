@@ -8787,5 +8787,16 @@
     "link": "https://en.wikipedia.org/wiki/Mohammad_Khatami",
     "lat": 35.69,
     "lng": 51.42
+  },
+  {
+    "id": "e800",
+    "year": 1920,
+    "countryId": "mughal-india",
+    "type": "other",
+    "title": "Non-cooperation movement launched",
+    "description": "Gandhi turned Congress from petitions to mass refusal — boycotts of courts, schools, and cloth that made nationalism a village-level force.",
+    "link": "https://en.wikipedia.org/wiki/Non-cooperation_movement_(1919%E2%80%931922)",
+    "lat": 28.66,
+    "lng": 77.23
   }
 ]
