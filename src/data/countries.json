@@ -52,10 +52,36 @@
       { "name": "Ottoman Empire",     "startYear": 1500, "endYear": 1922 },
       { "name": "Republic of Turkey", "startYear": 1923, "endYear": 2000 }
     ] },
-  { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f" },
-  { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f" },
-  { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199" },
-  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c" },
+  { "id": "portugal", "name": "Portugal", "continent": "Europe", "color": "#cfe3e0", "mapColor": "#7fa8a3", "mapStroke": "#5f847f",
+    "eras": [
+      { "name": "Kingdom of Portugal",  "startYear": 1500, "endYear": 1580 },
+      { "name": "Iberian Union",        "startYear": 1580, "endYear": 1640 },
+      { "name": "Kingdom of Portugal",  "startYear": 1640, "endYear": 1910 },
+      { "name": "Portuguese Republic",  "startYear": 1910, "endYear": 2000 }
+    ] },
+  { "id": "dutch-republic", "name": "Dutch Republic", "continent": "Europe", "color": "#f3ddc2", "mapColor": "#c9995e", "mapStroke": "#a1793f",
+    "eras": [
+      { "name": "Habsburg Netherlands",        "startYear": 1500, "endYear": 1581 },
+      { "name": "Dutch Republic",              "startYear": 1581, "endYear": 1795 },
+      { "name": "Batavian Republic",           "startYear": 1795, "endYear": 1806 },
+      { "name": "Kingdom of Holland",          "startYear": 1806, "endYear": 1813 },
+      { "name": "Kingdom of the Netherlands",  "startYear": 1815, "endYear": 2000 }
+    ] },
+  { "id": "sweden", "name": "Sweden", "continent": "Europe", "color": "#cdd5ec", "mapColor": "#8494c4", "mapStroke": "#647199",
+    "eras": [
+      { "name": "Kalmar Union",      "startYear": 1500, "endYear": 1523 },
+      { "name": "Kingdom of Sweden", "startYear": 1523, "endYear": 2000 }
+    ] },
+  { "id": "poland-lithuania", "name": "Poland-Lithuania", "continent": "Europe", "color": "#e3ccd6", "mapColor": "#b57f9f", "mapStroke": "#8f617c",
+    "eras": [
+      { "name": "Kingdom of Poland",              "startYear": 1500, "endYear": 1569 },
+      { "name": "Polish-Lithuanian Commonwealth", "startYear": 1569, "endYear": 1795 },
+      { "name": "Partitioned Poland",             "startYear": 1795, "endYear": 1918 },
+      { "name": "Second Republic",                "startYear": 1918, "endYear": 1939 },
+      { "name": "Occupied Poland",                "startYear": 1939, "endYear": 1945 },
+      { "name": "People's Republic",              "startYear": 1945, "endYear": 1989 },
+      { "name": "Republic of Poland",             "startYear": 1989, "endYear": 2000 }
+    ] },
   { "id": "china", "name": "China (Ming/Qing)", "continent": "Asia & Middle East", "color": "#f0d0c6", "mapColor": "#c07a62", "mapStroke": "#9a5c47" },
   { "id": "japan", "name": "Japan", "continent": "Asia & Middle East", "color": "#f2d3da", "mapColor": "#c26e7e", "mapStroke": "#9b5261" },
   { "id": "mughal-india", "name": "Mughal India", "continent": "Asia & Middle East", "color": "#eee0c2", "mapColor": "#c2a35a", "mapStroke": "#9a7f40" },
