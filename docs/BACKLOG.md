@@ -10,10 +10,11 @@ events, territory snapshots). Poland's partition era (1795–1918) keeps events
 and an era label but no rulers and no map presence — the approved treatment
 for long statelessness.
 
-### F2. Asia & Middle East batch (1700–2000)
-China (Qing → Republic → People's Republic), Japan (Tokugawa → Meiji → modern),
-Mughal India (→ British Raj → India), Safavid Persia (→ Qajar → Pahlavi → Iran).
-Same deliverables as F1.
+### F2. Asia & Middle East batch (1700–2000) — DONE in v26.7
+China, Japan, India, and Iran populated to 2000. India's colonial period uses
+the Poland treatment (era "British Raj", events continue, bare ribbon, absent
+from map 1820–1940); China's warlord era and Persia's interregna are bare-ribbon
+gaps; Deng Xiaoping and Iran's Supreme Leaders follow the de-facto-heads rule.
 
 ### F3. Africa & Americas batch (1700–2000)
 Ethiopia continues to 2000 (Empire → Derg → Federal Republic). Decide whether
@@ -38,10 +39,9 @@ and selection change); the scroll badge, ruler ribbon labels, and century
 watermarks all position from those measurements.
 
 ### B2. Countries vanish from the map after 1700
-The 1730–2000 snapshots now cover all ten European countries (v26.6); the
-eight Asia/Africa/Americas countries still disappear past 1700 until F2–F3
-land. Intentional (stale borders were judged worse than absence), but it can
-read as a bug.
+The 1730–2000 snapshots now cover fourteen countries (v26.7); only the four
+Africa/Americas countries (Songhai, Ethiopia, Aztec, Inca) still end at 1700
+pending F3 — and three of those ended as states before 1700 anyway.
 
 ### B3. EventCell fast-refresh lint warning — FIXED in v26.4
 `TYPE_COLORS` moved to `src/eventTypeColors.js` as part of the Wikipedia hover
