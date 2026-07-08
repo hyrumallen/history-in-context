@@ -9854,5 +9854,27 @@
     "link": "https://en.wikipedia.org/wiki/Pedro_Boh%C3%B3rquez",
     "lat": -26.0,
     "lng": -66.0
+  },
+  {
+    "id": "e897",
+    "year": 1768,
+    "countryId": "songhai",
+    "type": "other",
+    "title": "The desert closes in on the river trade",
+    "description": "Tuareg confederations squeezed the Niger commerce from both banks; Timbuktu's merchants paid whoever was strongest that season.",
+    "link": "https://en.wikipedia.org/wiki/Tuareg_people",
+    "lat": 16.77,
+    "lng": -3.0
+  },
+  {
+    "id": "e898",
+    "year": 1667,
+    "countryId": "aztec",
+    "type": "other",
+    "title": "The cathedral dedicated",
+    "description": "Mexico City's cathedral was solemnly dedicated, its interior at last complete after more than a century of work.",
+    "link": "https://en.wikipedia.org/wiki/Mexico_City_Metropolitan_Cathedral",
+    "lat": 19.43,
+    "lng": -99.13
   }
 ]
