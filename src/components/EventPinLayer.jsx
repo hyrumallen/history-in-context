@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import events from '../data/events.json'
 import { TYPE_COLORS } from '../eventTypeColors'
 import { pinsInWindow, pinEmphasis } from '../mapPins'
@@ -16,6 +16,9 @@ function project(lng, lat) {
 export default function EventPinLayer({ currentYear, selectedIds }) {
   const pins = pinsInWindow(events, currentYear, selectedIds)
   const timerRef = useRef(null)
+
+  useEffect(() => () => clearTimeout(timerRef.current), [])
+
   const openCard = (event, target, pinned) => {
     clearTimeout(timerRef.current)
     showCard(event, target.getBoundingClientRect(), pinned)
