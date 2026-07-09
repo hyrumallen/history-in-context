@@ -6,6 +6,7 @@ import CountrySidebar from './components/CountrySidebar'
 import EventHoverCard from './components/EventHoverCard'
 import WorldMap from './components/WorldMap'
 import { useIsMobile } from './hooks/useIsMobile'
+import { usePlayback } from './hooks/usePlayback'
 
 const DEFAULT_IDS = ['england', 'france', 'spain', 'holy-roman-empire', 'russia', 'ottoman-empire']
 const STORAGE_KEY = 'hic-selected-countries'
@@ -94,6 +95,8 @@ function App() {
   }, [])
 
   const togglePlay = useCallback(() => setPlaying(p => !p), [])
+
+  usePlayback({ playing, year: currentYear, setYear: setCurrentYear, max: END_YEAR, onEnd: () => setPlaying(false) })
 
   useEffect(() => {
     if (prevPlayingRef.current && !playing) gridRef.current?.scrollToYear(yearRef.current)
@@ -218,6 +221,9 @@ function App() {
                 mode="full"
                 currentYear={currentYear}
                 selectedIds={selectedIdSet}
+                playing={playing}
+                onYearChange={handleMapYear}
+                onTogglePlay={togglePlay}
               />
             </div>
           )}
@@ -253,6 +259,9 @@ function App() {
                 mode={isMini ? 'mini' : 'full'}
                 currentYear={currentYear}
                 selectedIds={selectedIdSet}
+                playing={playing}
+                onYearChange={handleMapYear}
+                onTogglePlay={togglePlay}
               />
             </div>
           </div>
