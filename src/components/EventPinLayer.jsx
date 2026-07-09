@@ -1,5 +1,6 @@
 import events from '../data/events.json'
 import { TYPE_COLORS } from '../eventTypeColors'
+import { pinsInWindow, pinEmphasis } from '../mapPins'
 
 const W = 800
 const H = 400
@@ -9,21 +10,23 @@ function project(lng, lat) {
 }
 
 export default function EventPinLayer({ currentYear, onPinClick, selectedIds }) {
-  const pins = events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
+  const pins = pinsInWindow(events, currentYear, selectedIds)
 
   return (
     <g>
       {pins.map(event => {
         const [cx, cy] = project(event.lng, event.lat)
+        const { r, opacity } = pinEmphasis(event.year, currentYear)
         return (
           <circle
             key={event.id}
             cx={cx}
             cy={cy}
-            r={4}
+            r={r}
             fill={TYPE_COLORS[event.type] ?? TYPE_COLORS.other}
             stroke="white"
             strokeWidth={0.8}
+            opacity={opacity}
             style={{ cursor: 'pointer' }}
             onClick={() => onPinClick(event.id)}
           >
