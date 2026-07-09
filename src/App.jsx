@@ -198,7 +198,6 @@ function App() {
               <WorldMap
                 mode="full"
                 currentYear={currentYear}
-                onPinClick={handlePinClick}
                 selectedIds={selectedIdSet}
               />
             </div>
@@ -211,7 +210,7 @@ function App() {
             open={sidebarOpen}
             overlay
           />
-          <EventHoverCard />
+          <EventHoverCard onShowInTimeline={handlePinClick} />
         </>
       ) : (
         <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
@@ -233,7 +232,6 @@ function App() {
               <WorldMap
                 mode={isMini ? 'mini' : 'full'}
                 currentYear={currentYear}
-                onPinClick={handlePinClick}
                 selectedIds={selectedIdSet}
               />
             </div>
@@ -247,7 +245,7 @@ function App() {
             overlay={false}
           />
 
-          <EventHoverCard />
+          <EventHoverCard onShowInTimeline={handlePinClick} />
         </div>
       )}
     </div>
