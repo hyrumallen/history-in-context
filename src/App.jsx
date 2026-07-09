@@ -81,6 +81,24 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const highlightElRef = useRef(null)
   const isMobile = useIsMobile()
+  const gridRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const yearRef = useRef(currentYear)
+  yearRef.current = currentYear
+  const prevPlayingRef = useRef(false)
+
+  const handleMapYear = useCallback((y) => {
+    setPlaying(false)
+    setCurrentYear(y)
+    gridRef.current?.scrollToYear(y)
+  }, [])
+
+  const togglePlay = useCallback(() => setPlaying(p => !p), [])
+
+  useEffect(() => {
+    if (prevPlayingRef.current && !playing) gridRef.current?.scrollToYear(yearRef.current)
+    prevPlayingRef.current = playing
+  }, [playing])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedIds))
@@ -186,6 +204,7 @@ function App() {
               scrolls vertically — that lets iOS Safari auto-hide its toolbars. */}
           <div style={{ position: 'relative', visibility: view === 'map' ? 'hidden' : 'visible' }}>
             <TimelineGrid
+              ref={gridRef}
               onYearChange={handleYearChange}
               selectedCountries={selectedCountries}
               onOpenSidebar={openSidebar}
@@ -217,6 +236,7 @@ function App() {
           <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
             <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
               <TimelineGrid
+                ref={gridRef}
                 onYearChange={handleYearChange}
                 selectedCountries={selectedCountries}
                 onOpenSidebar={openSidebar}
