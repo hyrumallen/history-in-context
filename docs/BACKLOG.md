@@ -1,8 +1,16 @@
 # Backlog
 
-Features and known bugs, in rough priority order. Updated 2026-07-09 (post v26.10).
+Features and known bugs, in rough priority order. Updated 2026-07-09 (post v26.11).
 
 ## Shipped
+
+### Mobile adaptation — DONE in v26.11 (2026-07-09)
+The timeline is usable on phones. A `useIsMobile()` hook (≤ 640px) drives:
+narrower columns (150px) and year gutter (44px) with `x proximity` scroll-snap so
+the full country selection is swipeable two-at-a-time; the floating mini-map is
+hidden (the header "Map" button opens the full-screen map instead); the header
+subtitle is hidden and padding tightened; and the Countries sidebar becomes a
+fixed overlay instead of pushing the grid. Desktop (> 640px) is unchanged.
 
 ### Live on GitHub Pages — DONE in v26.10 (2026-07-09)
 The app is deployed at https://hyrumallen.github.io/history-in-context/. A GitHub
