@@ -12,8 +12,6 @@ import { useIsMobile } from '../hooks/useIsMobile'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
-const YEAR_COL_WIDTH = '60px'
-const COUNTRY_COL_WIDTH = '180px'
 const HEADER_HEIGHT = '48px'
 const ROW_HEIGHT = '28px'
 
@@ -107,8 +105,10 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
 export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
   const scrollRef = useRef(null)
   const isMobile = useIsMobile()
-  const yearCol = isMobile ? '44px' : YEAR_COL_WIDTH
-  const countryCol = isMobile ? '150px' : COUNTRY_COL_WIDTH
+  const yearColPx = isMobile ? 44 : 60
+  const countryColPx = isMobile ? 150 : 180
+  const yearCol = `${yearColPx}px`
+  const countryCol = `${countryColPx}px`
   const innerRef = useRef(null)
   const offsetsRef = useRef([])
   const [measureTick, setMeasureTick] = useState(0)
@@ -132,23 +132,34 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   }, [selectedCountries])
 
   useEffect(() => {
-    const el = scrollRef.current
-    if (!el || !onYearChange) return
+    if (!onYearChange) return
+    // Desktop scrolls the inner container; mobile scrolls the page (window), so
+    // derive the scroll offset from the inner content's position in the viewport.
+    // 52 = sticky app-header height, so the reported year is the one just below it.
+    const target = isMobile ? window : scrollRef.current
+    if (!target) return
     let timer = null
+    const report = () => {
+      let scrollTop
+      if (isMobile) {
+        const inner = innerRef.current
+        if (!inner) return
+        scrollTop = Math.max(0, -inner.getBoundingClientRect().top + 52)
+      } else {
+        scrollTop = scrollRef.current?.scrollTop ?? 0
+      }
+      onYearChange(yearAtOffset(offsetsRef.current, scrollTop))
+    }
     const handleScroll = () => {
       if (timer) return
-      timer = setTimeout(() => {
-        timer = null
-        const year = yearAtOffset(offsetsRef.current, el.scrollTop)
-        onYearChange(year)
-      }, 50)
+      timer = setTimeout(() => { timer = null; report() }, 50)
     }
-    el.addEventListener('scroll', handleScroll, { passive: true })
+    target.addEventListener('scroll', handleScroll, { passive: true })
     return () => {
-      el.removeEventListener('scroll', handleScroll)
+      target.removeEventListener('scroll', handleScroll)
       if (timer) clearTimeout(timer)
     }
-  }, [onYearChange])
+  }, [onYearChange, isMobile])
 
   if (selectedCountries.length === 0) {
     return (
@@ -185,8 +196,11 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
 
   return (
     <div ref={scrollRef} style={{
-      overflow: 'auto',
-      height: '100%',
+      // Mobile: scroll horizontally only, with natural height, so the page (not
+      // this box) owns vertical scroll and iOS Safari can hide its toolbars.
+      overflowX: 'auto',
+      overflowY: isMobile ? 'visible' : 'auto',
+      height: isMobile ? undefined : '100%',
       width: '100%',
       background: '#f8f3e7',
       scrollSnapType: isMobile ? 'x proximity' : undefined,
@@ -205,7 +219,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
 
         {/* Top-left corner cell */}
         <div style={{
-          position: 'sticky',
+          position: isMobile ? 'static' : 'sticky',
           top: 0,
           left: 0,
           zIndex: 5,
@@ -214,10 +228,11 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
           borderBottom: '1px solid #d8c9a8',
         }} />
 
-        {/* Country header cells — sticky must be on the direct grid item */}
+        {/* Country header cells. Desktop pins them (sticky); mobile lets them
+            scroll away with the page (the current year shows in the app header). */}
         {selectedCountries.map(country => (
           <div key={country.id} style={{
-            position: 'sticky',
+            position: isMobile ? 'static' : 'sticky',
             top: 0,
             zIndex: 4,
             height: HEADER_HEIGHT,
@@ -238,6 +253,8 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         contentHeight={innerRef.current?.scrollHeight ?? 0}
         selectedCountries={selectedCountries}
         rulersByCountry={rulersByCountry}
+        yearColPx={yearColPx}
+        countryColPx={countryColPx}
       />
       </div>
     </div>

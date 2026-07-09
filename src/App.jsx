@@ -48,6 +48,18 @@ const FULL_PANEL_STYLE = {
   zIndex: 10,
 }
 
+// On mobile the page itself scrolls, so the full-screen map is fixed to the
+// viewport (below the sticky header) rather than absolutely placed in the shell.
+const MOBILE_MAP_STYLE = {
+  position: 'fixed',
+  top: 52,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  overflow: 'hidden',
+  zIndex: 40,
+}
+
 function headerButtonStyle(active, radius) {
   return {
     font: 'inherit',
@@ -121,7 +133,10 @@ function App() {
   } : {}
 
   return (
-    <div className="app-shell" style={{ display: 'flex', flexDirection: 'column' }}>
+    <div
+      className={isMobile ? undefined : 'app-shell'}
+      style={{ display: 'flex', flexDirection: 'column', ...(isMobile ? { minHeight: '100dvh' } : {}) }}
+    >
       <header style={{
         background: '#1a1a2e',
         color: 'white',
@@ -131,6 +146,7 @@ function App() {
         gap: '16px',
         flexShrink: 0,
         height: '52px',
+        ...(isMobile ? { position: 'sticky', top: 0, zIndex: 50 } : {}),
       }}>
         <span style={{ fontFamily: SERIF, fontSize: '20px', fontWeight: '700', letterSpacing: '0.2px' }}>
           History in Context
@@ -138,6 +154,11 @@ function App() {
         {!isMobile && (
           <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
             {START_YEAR} – {END_YEAR} · Five Centuries of History
+          </span>
+        )}
+        {isMobile && (
+          <span style={{ fontSize: '15px', color: '#c9c9e6', fontFamily: SERIF, fontVariantNumeric: 'tabular-nums' }}>
+            {currentYear}
           </span>
         )}
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -159,9 +180,11 @@ function App() {
         </div>
       </header>
 
-      <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
-        <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
-          <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
+      {isMobile ? (
+        <>
+          {/* Timeline flows in the document so the page (not an inner box)
+              scrolls vertically — that lets iOS Safari auto-hide its toolbars. */}
+          <div style={{ position: 'relative', visibility: view === 'map' ? 'hidden' : 'visible' }}>
             <TimelineGrid
               onYearChange={handleYearChange}
               selectedCountries={selectedCountries}
@@ -170,7 +193,38 @@ function App() {
             />
           </div>
 
-          {(!isMobile || view === 'map') && (
+          {view === 'map' && (
+            <div className="map-panel" style={MOBILE_MAP_STYLE}>
+              <WorldMap
+                mode="full"
+                currentYear={currentYear}
+                onPinClick={handlePinClick}
+                selectedIds={selectedIdSet}
+              />
+            </div>
+          )}
+
+          <CountrySidebar
+            countries={countries}
+            selectedIds={selectedIds}
+            onChange={setSelectedIds}
+            open={sidebarOpen}
+            overlay
+          />
+          <EventHoverCard />
+        </>
+      ) : (
+        <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
+          <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
+            <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
+              <TimelineGrid
+                onYearChange={handleYearChange}
+                selectedCountries={selectedCountries}
+                onOpenSidebar={openSidebar}
+                currentYear={currentYear}
+              />
+            </div>
+
             <div
               className="map-panel"
               style={isMini ? MINI_PANEL_STYLE : FULL_PANEL_STYLE}
@@ -183,19 +237,19 @@ function App() {
                 selectedIds={selectedIdSet}
               />
             </div>
-          )}
+          </div>
+
+          <CountrySidebar
+            countries={countries}
+            selectedIds={selectedIds}
+            onChange={setSelectedIds}
+            open={sidebarOpen}
+            overlay={false}
+          />
+
+          <EventHoverCard />
         </div>
-
-        <CountrySidebar
-          countries={countries}
-          selectedIds={selectedIds}
-          onChange={setSelectedIds}
-          open={sidebarOpen}
-          overlay={isMobile}
-        />
-
-        <EventHoverCard />
-      </div>
+      )}
     </div>
   )
 }

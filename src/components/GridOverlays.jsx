@@ -1,8 +1,6 @@
 import { START_YEAR, END_YEAR, SERIF } from '../constants'
 import { labeledReigns } from '../reignLabels'
 
-const YEAR_COL_PX = 60
-const COUNTRY_COL_PX = 180
 const RIBBON_PX = 15
 // Vertical 8px small-caps text with 2px letter-spacing runs ~11px per character.
 const PX_PER_CHAR = 11
@@ -41,12 +39,12 @@ export function WatermarkLayer({ offsets, contentHeight }) {
   )
 }
 
-export function RibbonLabelLayer({ offsets, contentHeight, selectedCountries, rulersByCountry }) {
+export function RibbonLabelLayer({ offsets, contentHeight, selectedCountries, rulersByCountry, yearColPx = 60, countryColPx = 180 }) {
   if (!offsets || offsets.length === 0) return null
   return (
     <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', height: contentHeight, zIndex: 2 }}>
       {selectedCountries.map((country, col) => {
-        const left = YEAR_COL_PX + col * COUNTRY_COL_PX
+        const left = yearColPx + col * countryColPx
         const reigns = rulersByCountry[country.id] || []
         return labeledReigns(reigns).map(r => {
           const startYear = Math.max(r.startYear, START_YEAR)
