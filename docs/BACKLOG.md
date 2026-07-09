@@ -1,6 +1,16 @@
 # Backlog
 
-Features and known bugs, in rough priority order. Updated 2026-07-06 (post v26.3).
+Features and known bugs, in rough priority order. Updated 2026-07-09 (post v26.10).
+
+## Shipped
+
+### Live on GitHub Pages — DONE in v26.10 (2026-07-09)
+The app is deployed at https://hyrumallen.github.io/history-in-context/. A GitHub
+Actions workflow (`.github/workflows/deploy.yml`) lints, tests, and builds on every
+push to `master`, then publishes `dist/` to Pages — a failing check blocks the
+deploy. A conditional `base` in `vite.config.js` prefixes production assets with
+`/history-in-context/` while keeping local dev at the clean root; `index.html` has
+title/description/Open Graph tags for shareable link previews.
 
 ## Features
 

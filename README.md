@@ -1,5 +1,7 @@
 # History in Context
 
+**Live site:** https://hyrumallen.github.io/history-in-context/
+
 A browser-based timeline of five centuries of history (1500–2000). Historical events didn't happen in isolation — this app shows 22 countries side by side so you can see what was happening everywhere at once. Countries evolve through their successor states as you scroll: the Holy Roman Empire becomes Germany, the Ottoman Empire becomes Turkey.
 
 ## Features
