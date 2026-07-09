@@ -11603,5 +11603,16 @@
     "link": "https://en.wikipedia.org/wiki/1693_Sicily_earthquake",
     "lat": 37.5,
     "lng": 15.08
+  },
+  {
+    "id": "e1056",
+    "year": 1564,
+    "countryId": "austria",
+    "type": "other",
+    "title": "The Austrian lands divided",
+    "description": "Ferdinand I's death split the hereditary lands among three sons — Vienna, Graz, and Innsbruck each with its own Habsburg court.",
+    "link": "https://en.wikipedia.org/wiki/Ferdinand_I,_Holy_Roman_Emperor",
+    "lat": 48.21,
+    "lng": 16.37
   }
 ]
