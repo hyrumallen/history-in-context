@@ -2,6 +2,9 @@ import worldOutline from '../data/world-outline.json'
 import TerritoryLayer from './TerritoryLayer'
 import EventPinLayer from './EventPinLayer'
 import useMapTransform from '../hooks/useMapTransform'
+import { START_YEAR, END_YEAR } from '../constants'
+import Legend from './Legend'
+import MapControls from './MapControls'
 
 const W = 800
 const H = 400
@@ -17,7 +20,7 @@ function featureRings(feature) {
   return []
 }
 
-export default function WorldMap({ currentYear, onPinClick, mode = 'full', selectedIds }) {
+export default function WorldMap({ currentYear, mode = 'mini', selectedIds, playing, onYearChange, onTogglePlay }) {
   const { transform, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
   const isMini = mode === 'mini'
@@ -44,7 +47,7 @@ export default function WorldMap({ currentYear, onPinClick, mode = 'full', selec
             )}
           </g>
           <TerritoryLayer currentYear={currentYear} width={W} height={H} selectedIds={selectedIds} />
-          <EventPinLayer currentYear={currentYear} onPinClick={onPinClick} selectedIds={selectedIds} />
+          <EventPinLayer currentYear={currentYear} selectedIds={selectedIds} isMini={isMini} />
         </g>
       </svg>
 
@@ -77,6 +80,32 @@ export default function WorldMap({ currentYear, onPinClick, mode = 'full', selec
         }}>
           Scroll to zoom · drag to pan · double-click to reset
         </div>
+      )}
+
+      {!isMini && (
+        <div style={{
+          position: 'absolute',
+          top: 12,
+          left: 16,
+          background: 'rgba(253,249,239,0.92)',
+          border: '1px solid #d8c9a8',
+          borderRadius: 6,
+          padding: '8px 10px',
+          pointerEvents: 'none',
+        }}>
+          <Legend />
+        </div>
+      )}
+
+      {!isMini && (
+        <MapControls
+          year={currentYear}
+          onYearChange={onYearChange}
+          playing={playing}
+          onTogglePlay={onTogglePlay}
+          min={START_YEAR}
+          max={END_YEAR}
+        />
       )}
     </div>
   )

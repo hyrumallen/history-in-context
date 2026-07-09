@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, memo, Fragment } from 'react'
+import { useRef, useEffect, useState, memo, Fragment, forwardRef, useImperativeHandle } from 'react'
 import events from '../data/events.json'
 import rulers from '../data/rulers.json'
 import CountryHeader from './CountryHeader'
@@ -102,13 +102,30 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
   ))
 })
 
-export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
+const TimelineGrid = forwardRef(function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }, ref) {
   const scrollRef = useRef(null)
   const isMobile = useIsMobile()
   const yearColPx = isMobile ? 44 : 60
   const countryColPx = isMobile ? 150 : 180
   const yearCol = `${yearColPx}px`
   const countryCol = `${countryColPx}px`
+
+  useImperativeHandle(ref, () => ({
+    scrollToYear(year) {
+      const offsets = offsetsRef.current
+      const top = offsets[year - START_YEAR]
+      if (top == null) return
+      if (isMobile) {
+        const inner = innerRef.current
+        if (!inner) return
+        const innerDocTop = inner.getBoundingClientRect().top + window.scrollY
+        window.scrollTo({ top: Math.max(0, innerDocTop + top - 100) })
+      } else {
+        scrollRef.current?.scrollTo({ top })
+      }
+    },
+  }), [isMobile])
+
   const innerRef = useRef(null)
   const trackRef = useRef(null)
   const offsetsRef = useRef([])
@@ -315,4 +332,6 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       {gridStrip}
     </div>
   )
-}
+})
+
+export default TimelineGrid

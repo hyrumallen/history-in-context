@@ -6,6 +6,7 @@ import CountrySidebar from './components/CountrySidebar'
 import EventHoverCard from './components/EventHoverCard'
 import WorldMap from './components/WorldMap'
 import { useIsMobile } from './hooks/useIsMobile'
+import { usePlayback } from './hooks/usePlayback'
 
 const DEFAULT_IDS = ['england', 'france', 'spain', 'holy-roman-empire', 'russia', 'ottoman-empire']
 const STORAGE_KEY = 'hic-selected-countries'
@@ -81,6 +82,26 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const highlightElRef = useRef(null)
   const isMobile = useIsMobile()
+  const gridRef = useRef(null)
+  const [playing, setPlaying] = useState(false)
+  const yearRef = useRef(currentYear)
+  yearRef.current = currentYear
+  const prevPlayingRef = useRef(false)
+
+  const handleMapYear = useCallback((y) => {
+    setPlaying(false)
+    setCurrentYear(y)
+    gridRef.current?.scrollToYear(y)
+  }, [])
+
+  const togglePlay = useCallback(() => setPlaying(p => !p), [])
+
+  usePlayback({ playing, year: currentYear, setYear: setCurrentYear, max: END_YEAR, onEnd: () => setPlaying(false) })
+
+  useEffect(() => {
+    if (prevPlayingRef.current && !playing) gridRef.current?.scrollToYear(yearRef.current)
+    prevPlayingRef.current = playing
+  }, [playing])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedIds))
@@ -186,6 +207,7 @@ function App() {
               scrolls vertically — that lets iOS Safari auto-hide its toolbars. */}
           <div style={{ position: 'relative', visibility: view === 'map' ? 'hidden' : 'visible' }}>
             <TimelineGrid
+              ref={gridRef}
               onYearChange={handleYearChange}
               selectedCountries={selectedCountries}
               onOpenSidebar={openSidebar}
@@ -198,8 +220,10 @@ function App() {
               <WorldMap
                 mode="full"
                 currentYear={currentYear}
-                onPinClick={handlePinClick}
                 selectedIds={selectedIdSet}
+                playing={playing}
+                onYearChange={handleMapYear}
+                onTogglePlay={togglePlay}
               />
             </div>
           )}
@@ -211,13 +235,14 @@ function App() {
             open={sidebarOpen}
             overlay
           />
-          <EventHoverCard />
+          <EventHoverCard onShowInTimeline={handlePinClick} />
         </>
       ) : (
         <div style={{ flex: 1, display: 'flex', minHeight: 0 }}>
           <div style={{ flex: 1, position: 'relative', overflow: 'hidden', minWidth: 0 }}>
             <div style={{ position: 'absolute', inset: 0, visibility: view === 'map' ? 'hidden' : 'visible' }}>
               <TimelineGrid
+                ref={gridRef}
                 onYearChange={handleYearChange}
                 selectedCountries={selectedCountries}
                 onOpenSidebar={openSidebar}
@@ -233,8 +258,10 @@ function App() {
               <WorldMap
                 mode={isMini ? 'mini' : 'full'}
                 currentYear={currentYear}
-                onPinClick={handlePinClick}
                 selectedIds={selectedIdSet}
+                playing={playing}
+                onYearChange={handleMapYear}
+                onTogglePlay={togglePlay}
               />
             </div>
           </div>
@@ -247,7 +274,7 @@ function App() {
             overlay={false}
           />
 
-          <EventHoverCard />
+          <EventHoverCard onShowInTimeline={handlePinClick} />
         </div>
       )}
     </div>

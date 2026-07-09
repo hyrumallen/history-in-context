@@ -14,7 +14,7 @@ function cardPosition(rect) {
   return { top, left }
 }
 
-export default function EventHoverCard() {
+export default function EventHoverCard({ onShowInTimeline }) {
   const card = useSyncExternalStore(subscribeCard, getCardState)
   const [summary, setSummary] = useState(null)
   const ref = useRef(null)
@@ -82,7 +82,7 @@ export default function EventHoverCard() {
       <div style={{ maxHeight: 150, overflowY: 'auto' }}>
         {summary?.extract ?? event.description}
       </div>
-      <div style={{ clear: 'both', marginTop: 8 }}>
+      <div style={{ clear: 'both', marginTop: 8, display: 'flex', gap: 16 }}>
         <a
           href={summary?.pageUrl ?? event.link}
           target="_blank"
@@ -91,6 +91,14 @@ export default function EventHoverCard() {
         >
           Read on Wikipedia →
         </a>
+        {onShowInTimeline && (
+          <button
+            onClick={() => { onShowInTimeline(event.id); closeCard() }}
+            style={{ font: 'inherit', fontSize: '12px', fontWeight: 600, color: '#4a6fa5', background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          >
+            Show in timeline ↦
+          </button>
+        )}
       </div>
     </div>
   )
