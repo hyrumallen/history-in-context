@@ -31,6 +31,7 @@ export default function MapControls({ year, onYearChange, playing, onTogglePlay,
       </button>
       <input
         type="range"
+        aria-label="Year"
         min={min}
         max={max}
         step={1}

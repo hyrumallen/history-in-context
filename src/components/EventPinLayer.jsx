@@ -13,8 +13,10 @@ function project(lng, lat) {
   return [(lng + 180) * (W / 360), (90 - lat) * (H / 180)]
 }
 
-export default function EventPinLayer({ currentYear, selectedIds }) {
-  const pins = pinsInWindow(events, currentYear, selectedIds)
+export default function EventPinLayer({ currentYear, selectedIds, isMini }) {
+  const pins = isMini
+    ? events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
+    : pinsInWindow(events, currentYear, selectedIds)
   const timerRef = useRef(null)
 
   useEffect(() => () => clearTimeout(timerRef.current), [])
@@ -28,7 +30,7 @@ export default function EventPinLayer({ currentYear, selectedIds }) {
     <g>
       {pins.map(event => {
         const [cx, cy] = project(event.lng, event.lat)
-        const { r, opacity } = pinEmphasis(event.year, currentYear)
+        const { r, opacity } = isMini ? { r: 4, opacity: undefined } : pinEmphasis(event.year, currentYear)
         return (
           <circle
             key={event.id}

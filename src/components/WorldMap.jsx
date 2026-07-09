@@ -47,7 +47,7 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
             )}
           </g>
           <TerritoryLayer currentYear={currentYear} width={W} height={H} selectedIds={selectedIds} />
-          <EventPinLayer currentYear={currentYear} selectedIds={selectedIds} />
+          <EventPinLayer currentYear={currentYear} selectedIds={selectedIds} isMini={isMini} />
         </g>
       </svg>
 
