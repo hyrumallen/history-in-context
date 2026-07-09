@@ -191,6 +191,7 @@ function App() {
           selectedIds={selectedIds}
           onChange={setSelectedIds}
           open={sidebarOpen}
+          overlay={isMobile}
         />
 
         <EventHoverCard />
