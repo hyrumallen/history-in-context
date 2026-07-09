@@ -22,10 +22,11 @@ Aztec → Mexico, Inca → Peru), with colonial eras getting the Poland treatmen
 Ethiopia runs continuously with a bare-ribbon Zemene Mesafint. Every column
 now reaches 2000.
 
-### F4. New countries beyond the original 18
-Candidates that only exist post-1700: United States, Brazil, Italy, Austria
-(separate from HRE column after 1806). Needs a design decision — the current
-model assumes every country exists at 1500.
+### F4. New countries beyond the original 18 — DONE in v26.9
+USA, Brazil, Austria, and Italy added as full 1500–2000 columns (roster now
+22). The "post-1500 problem" dissolved: predecessor eras (Colonial North
+America, Portuguese Brazil, Italian States) with bare ribbons are the Poland
+treatment run from the other direction — no model change was needed.
 
 ### F5. Timeline row virtualization
 501 years × N countries renders fine today, but if row count or event density

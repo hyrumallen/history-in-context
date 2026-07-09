@@ -1,11 +1,11 @@
 # History in Context
 
-A browser-based timeline of five centuries of history (1500–2000). Historical events didn't happen in isolation — this app shows 18 countries side by side so you can see what was happening everywhere at once. Countries evolve through their successor states as you scroll: the Holy Roman Empire becomes Germany, the Ottoman Empire becomes Turkey.
+A browser-based timeline of five centuries of history (1500–2000). Historical events didn't happen in isolation — this app shows 22 countries side by side so you can see what was happening everywhere at once. Countries evolve through their successor states as you scroll: the Holy Roman Empire becomes Germany, the Ottoman Empire becomes Turkey.
 
 ## Features
 
 - **Timeline grid** — one column per country, one row per year, with events and color-coded ruler reign bands
-- **Dynamic country selection** — a collapsible sidebar groups 18 countries by continent (Europe, Asia & Middle East, Africa, Americas) with per-country and per-continent checkboxes; your selection is remembered between visits
+- **Dynamic country selection** — a collapsible sidebar groups 22 countries by continent (Europe, Asia & Middle East, Africa, Americas) with per-country and per-continent checkboxes; your selection is remembered between visits
 - **World map** — a floating mini-map follows your scroll year, showing shifting territorial borders and event pins; click it (or the header toggle) for a full-screen map with zoom and pan
 - **Linked navigation** — click a map pin to jump to that event in the timeline
 
@@ -22,11 +22,11 @@ Then open http://localhost:5173.
 
 React 19 + Vite, no backend. All historical data lives in JSON files under `src/data/`:
 
-- `countries.json` — the 18 countries with continent grouping, color palette, and successor-state eras
+- `countries.json` — the 22 countries with continent grouping, color palette, and successor-state eras
 - `rulers.json` — ruler reigns from monarchs to presidents (shown as shaded bands in each column)
 - `events.json` — 500+ dated events with coordinates, descriptions, and links
 - `territories.json` — territorial border polygons at 18 time snapshots (1500–2000)
 
-All 18 countries are populated across the full 1500–2000 range, evolving through their successor states (Holy Roman Empire → Germany, Aztec Empire → Mexico, Songhai → Mali). Colonial and stateless periods show events under an era label with no ruler — history keeps happening even when the state is gone.
+All 22 countries are populated across the full 1500–2000 range, evolving through their successor states (Holy Roman Empire → Germany, Aztec Empire → Mexico, Songhai → Mali). Colonial and stateless periods show events under an era label with no ruler — history keeps happening even when the state is gone.
 
 Design specs and implementation plans are under `docs/superpowers/`.

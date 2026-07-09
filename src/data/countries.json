@@ -137,5 +137,31 @@
       { "name": "Inca Empire",         "startYear": 1500, "endYear": 1572 },
       { "name": "Viceroyalty of Peru", "startYear": 1572, "endYear": 1821 },
       { "name": "Republic of Peru",    "startYear": 1821, "endYear": 2000 }
+    ] },
+  { "id": "usa", "name": "United States", "continent": "Americas", "color": "#ccd6e8", "mapColor": "#7c8fb5", "mapStroke": "#5d6f94",
+    "eras": [
+      { "name": "Colonial North America", "startYear": 1500, "endYear": 1776 },
+      { "name": "United States",          "startYear": 1776, "endYear": 2000 }
+    ] },
+  { "id": "brazil", "name": "Brazil", "continent": "Americas", "color": "#d2e4c8", "mapColor": "#86ab7d", "mapStroke": "#65875e",
+    "eras": [
+      { "name": "Portuguese Brazil",  "startYear": 1500, "endYear": 1822 },
+      { "name": "Empire of Brazil",   "startYear": 1822, "endYear": 1889 },
+      { "name": "Republic of Brazil", "startYear": 1889, "endYear": 2000 }
+    ] },
+  { "id": "austria", "name": "Austria", "continent": "Europe", "color": "#ecd2cc", "mapColor": "#bd8578", "mapStroke": "#96655a",
+    "eras": [
+      { "name": "Habsburg Monarchy", "startYear": 1500, "endYear": 1804 },
+      { "name": "Austrian Empire",   "startYear": 1804, "endYear": 1867 },
+      { "name": "Austria-Hungary",   "startYear": 1867, "endYear": 1918 },
+      { "name": "First Republic",    "startYear": 1918, "endYear": 1938 },
+      { "name": "Annexed Austria",   "startYear": 1938, "endYear": 1945 },
+      { "name": "Second Republic",   "startYear": 1945, "endYear": 2000 }
+    ] },
+  { "id": "italy", "name": "Italy", "continent": "Europe", "color": "#cce4e0", "mapColor": "#78aba1", "mapStroke": "#5a877e",
+    "eras": [
+      { "name": "Italian States",   "startYear": 1500, "endYear": 1861 },
+      { "name": "Kingdom of Italy", "startYear": 1861, "endYear": 1946 },
+      { "name": "Italian Republic", "startYear": 1946, "endYear": 2000 }
     ] }
 ]
