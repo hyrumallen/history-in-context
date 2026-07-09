@@ -5,6 +5,7 @@ import TimelineGrid from './components/TimelineGrid'
 import CountrySidebar from './components/CountrySidebar'
 import EventHoverCard from './components/EventHoverCard'
 import WorldMap from './components/WorldMap'
+import { useIsMobile } from './hooks/useIsMobile'
 
 const DEFAULT_IDS = ['england', 'france', 'spain', 'holy-roman-empire', 'russia', 'ottoman-empire']
 const STORAGE_KEY = 'hic-selected-countries'
@@ -67,6 +68,7 @@ function App() {
   const [selectedIds, setSelectedIds] = useState(loadSelection)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const highlightElRef = useRef(null)
+  const isMobile = useIsMobile()
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(selectedIds))
@@ -123,7 +125,7 @@ function App() {
       <header style={{
         background: '#1a1a2e',
         color: 'white',
-        padding: '0 24px',
+        padding: isMobile ? '0 12px' : '0 24px',
         display: 'flex',
         alignItems: 'center',
         gap: '16px',
@@ -133,9 +135,11 @@ function App() {
         <span style={{ fontFamily: SERIF, fontSize: '20px', fontWeight: '700', letterSpacing: '0.2px' }}>
           History in Context
         </span>
-        <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
-          {START_YEAR} – {END_YEAR} · Five Centuries of History
-        </span>
+        {!isMobile && (
+          <span style={{ fontSize: '13px', color: '#9999bb', letterSpacing: '0.5px' }}>
+            {START_YEAR} – {END_YEAR} · Five Centuries of History
+          </span>
+        )}
         <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div style={{ display: 'flex' }}>
             <button style={headerButtonStyle(view === 'timeline', '5px 0 0 5px')} onClick={() => setView('timeline')}>
@@ -166,18 +170,20 @@ function App() {
             />
           </div>
 
-          <div
-            className="map-panel"
-            style={isMini ? MINI_PANEL_STYLE : FULL_PANEL_STYLE}
-            {...expandProps}
-          >
-            <WorldMap
-              mode={isMini ? 'mini' : 'full'}
-              currentYear={currentYear}
-              onPinClick={handlePinClick}
-              selectedIds={selectedIdSet}
-            />
-          </div>
+          {(!isMobile || view === 'map') && (
+            <div
+              className="map-panel"
+              style={isMini ? MINI_PANEL_STYLE : FULL_PANEL_STYLE}
+              {...expandProps}
+            >
+              <WorldMap
+                mode={isMini ? 'mini' : 'full'}
+                currentYear={currentYear}
+                onPinClick={handlePinClick}
+                selectedIds={selectedIdSet}
+              />
+            </div>
+          )}
         </div>
 
         <CountrySidebar
@@ -185,6 +191,7 @@ function App() {
           selectedIds={selectedIds}
           onChange={setSelectedIds}
           open={sidebarOpen}
+          overlay={isMobile}
         />
 
         <EventHoverCard />

@@ -2,7 +2,7 @@ import Legend from './Legend'
 
 const CONTINENT_ORDER = ['Europe', 'Asia & Middle East', 'Africa', 'Americas']
 
-export default function CountrySidebar({ countries, selectedIds, onChange, open }) {
+export default function CountrySidebar({ countries, selectedIds, onChange, open, overlay = false }) {
   const groups = CONTINENT_ORDER
     .map(continent => ({ continent, items: countries.filter(c => c.continent === continent) }))
     .filter(g => g.items.length > 0)
@@ -21,7 +21,19 @@ export default function CountrySidebar({ countries, selectedIds, onChange, open 
   }
 
   return (
-    <div className="sidebar-panel" style={{
+    <div className="sidebar-panel" style={overlay ? {
+      position: 'fixed',
+      top: 52,
+      right: 0,
+      bottom: 0,
+      width: open ? '82%' : 0,
+      maxWidth: 320,
+      zIndex: 30,
+      overflow: 'hidden',
+      background: '#f8f3e7',
+      borderLeft: open ? '1px solid #d8c9a8' : 'none',
+      boxShadow: open ? '-6px 0 20px rgba(74, 58, 34, 0.25)' : 'none',
+    } : {
       width: open ? 230 : 0,
       flexShrink: 0,
       overflow: 'hidden',
@@ -29,7 +41,7 @@ export default function CountrySidebar({ countries, selectedIds, onChange, open 
       borderLeft: open ? '1px solid #d8c9a8' : 'none',
     }}>
       <div style={{
-        width: 230,
+        width: overlay ? '100%' : 230,
         height: '100%',
         overflowY: 'auto',
         padding: '14px 16px',
