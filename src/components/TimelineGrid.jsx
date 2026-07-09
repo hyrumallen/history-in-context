@@ -110,6 +110,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   const yearCol = `${yearColPx}px`
   const countryCol = `${countryColPx}px`
   const innerRef = useRef(null)
+  const trackRef = useRef(null)
   const offsetsRef = useRef([])
   const [measureTick, setMeasureTick] = useState(0)
   void measureTick // overlays below re-read offsetsRef on every measure-triggered render
@@ -135,7 +136,8 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
     if (!onYearChange) return
     // Desktop scrolls the inner container; mobile scrolls the page (window), so
     // derive the scroll offset from the inner content's position in the viewport.
-    // 52 = sticky app-header height, so the reported year is the one just below it.
+    // 100 = sticky app header (52) + pinned title strip (48), so the reported
+    // year is the one just below both.
     const target = isMobile ? window : scrollRef.current
     if (!target) return
     let timer = null
@@ -144,7 +146,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       if (isMobile) {
         const inner = innerRef.current
         if (!inner) return
-        scrollTop = Math.max(0, -inner.getBoundingClientRect().top + 52)
+        scrollTop = Math.max(0, -inner.getBoundingClientRect().top + 100)
       } else {
         scrollTop = scrollRef.current?.scrollTop ?? 0
       }
@@ -160,6 +162,22 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       if (timer) clearTimeout(timer)
     }
   }, [onYearChange, isMobile])
+
+  // Mobile only: keep the pinned title strip aligned with the columns by
+  // mirroring the horizontal scroll position of the grid onto the strip track.
+  useEffect(() => {
+    if (!isMobile) return
+    const el = scrollRef.current
+    if (!el) return
+    const sync = () => {
+      if (trackRef.current) {
+        trackRef.current.style.transform = `translateX(${yearColPx - el.scrollLeft}px)`
+      }
+    }
+    sync()
+    el.addEventListener('scroll', sync, { passive: true })
+    return () => el.removeEventListener('scroll', sync)
+  }, [isMobile, yearColPx, selectedCountries])
 
   if (selectedCountries.length === 0) {
     return (
@@ -194,7 +212,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
     )
   }
 
-  return (
+  const gridStrip = (
     <div ref={scrollRef} style={{
       // Mobile: scroll horizontally only, with natural height, so the page (not
       // this box) owns vertical scroll and iOS Safari can hide its toolbars.
@@ -217,32 +235,36 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         gridAutoRows: `minmax(${ROW_HEIGHT}, auto)`,
       }}>
 
-        {/* Top-left corner cell */}
-        <div style={{
-          position: isMobile ? 'static' : 'sticky',
-          top: 0,
-          left: 0,
-          zIndex: 5,
-          height: HEADER_HEIGHT,
-          background: '#f8f3e7',
-          borderBottom: '1px solid #d8c9a8',
-        }} />
+        {/* Header row — desktop only (sticky). On mobile the pinned title strip
+            below the app header shows the column titles instead. */}
+        {!isMobile && (
+          <>
+            {/* Top-left corner cell */}
+            <div style={{
+              position: 'sticky',
+              top: 0,
+              left: 0,
+              zIndex: 5,
+              height: HEADER_HEIGHT,
+              background: '#f8f3e7',
+              borderBottom: '1px solid #d8c9a8',
+            }} />
 
-        {/* Country header cells. Desktop pins them (sticky); mobile lets them
-            scroll away with the page (the current year shows in the app header). */}
-        {selectedCountries.map(country => (
-          <div key={country.id} style={{
-            position: isMobile ? 'static' : 'sticky',
-            top: 0,
-            zIndex: 4,
-            height: HEADER_HEIGHT,
-            background: '#f8f3e7',
-            borderBottom: '1px solid #d8c9a8',
-            scrollSnapAlign: isMobile ? 'start' : undefined,
-          }}>
-            <CountryHeader country={country} year={currentYear} />
-          </div>
-        ))}
+            {/* Country header cells — sticky must be on the direct grid item */}
+            {selectedCountries.map(country => (
+              <div key={country.id} style={{
+                position: 'sticky',
+                top: 0,
+                zIndex: 4,
+                height: HEADER_HEIGHT,
+                background: '#f8f3e7',
+                borderBottom: '1px solid #d8c9a8',
+              }}>
+                <CountryHeader country={country} year={currentYear} />
+              </div>
+            ))}
+          </>
+        )}
 
         {/* One row per year */}
         <GridRows selectedCountries={selectedCountries} />
@@ -257,6 +279,40 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
         countryColPx={countryColPx}
       />
       </div>
+    </div>
+  )
+
+  if (!isMobile) return gridStrip
+
+  return (
+    <div>
+      {/* Pinned column titles: sticky just below the app header, slid
+          horizontally in sync with the grid by the trackRef effect above. */}
+      <div style={{
+        position: 'sticky',
+        top: 52,
+        zIndex: 45,
+        height: HEADER_HEIGHT,
+        background: '#f8f3e7',
+        borderBottom: '1px solid #d8c9a8',
+        overflow: 'hidden',
+      }}>
+        <div ref={trackRef} style={{
+          display: 'flex',
+          height: '100%',
+          transform: `translateX(${yearColPx}px)`,
+          willChange: 'transform',
+        }}>
+          {selectedCountries.map(country => (
+            <div key={country.id} style={{ width: countryColPx, flexShrink: 0, height: '100%' }}>
+              <CountryHeader country={country} year={currentYear} />
+            </div>
+          ))}
+        </div>
+        {/* Cover the sticky year-gutter width so titles slide under it. */}
+        <div style={{ position: 'absolute', left: 0, top: 0, width: yearColPx, height: '100%', background: '#f8f3e7' }} />
+      </div>
+      {gridStrip}
     </div>
   )
 }
