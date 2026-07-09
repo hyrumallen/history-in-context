@@ -9,6 +9,7 @@ A browser-based timeline of five centuries of history (1500–2000). Historical 
 - **Timeline grid** — one column per country, one row per year, with events and color-coded ruler reign bands
 - **Dynamic country selection** — a collapsible sidebar groups 22 countries by continent (Europe, Asia & Middle East, Africa, Americas) with per-country and per-continent checkboxes; your selection is remembered between visits
 - **World map** — a floating mini-map follows your scroll year, showing shifting territorial borders and event pins; click it (or the header toggle) for a full-screen map with zoom and pan
+- **Interactive map** — the expanded map has a year slider with a play/time-lapse button (borders morph and events appear as time flows), a color legend, and hover/tap cards on event pins with Wikipedia summaries and a jump-to-timeline link
 - **Linked navigation** — click a map pin to jump to that event in the timeline
 - **Mobile-friendly** — on phones (≤ 640px) columns narrow and become swipeable, the map opens full-screen from the header, and the Countries panel slides in as an overlay
 

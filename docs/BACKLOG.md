@@ -1,8 +1,16 @@
 # Backlog
 
-Features and known bugs, in rough priority order. Updated 2026-07-09 (post v26.11).
+Features and known bugs, in rough priority order. Updated 2026-07-09 (post v26.16).
 
 ## Shipped
+
+### Interactive expanded map — DONE in v26.16 (2026-07-09)
+The expanded map is now an exploration tool: a year slider with a ▶ play/time-lapse
+(borders morph and events appear as you sweep), Wikipedia hover/tap cards on event
+pins (reusing the timeline card, with "Read on Wikipedia" + "Show in timeline"), a
+rolling decade-window of pins with exact-year emphasis, and an event-type color
+legend. The slider drives the shared year and scrolls the timeline via an imperative
+`scrollToYear`. Mini-map keeps its exact-year pins.
 
 ### Mobile adaptation — DONE in v26.11 (2026-07-09)
 The timeline is usable on phones. A `useIsMobile()` hook (≤ 640px) drives:
