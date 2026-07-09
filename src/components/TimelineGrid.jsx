@@ -8,6 +8,7 @@ import { WatermarkLayer, RibbonLabelLayer } from './GridOverlays'
 import { START_YEAR, END_YEAR, SERIF } from '../constants'
 import { measureOffsets, yearAtOffset } from '../rowOffsets'
 import { reignShade, reignIndexAt } from '../reignShades'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const YEARS = Array.from({ length: END_YEAR - START_YEAR + 1 }, (_, i) => START_YEAR + i)
 
@@ -105,6 +106,9 @@ const GridRows = memo(function GridRows({ selectedCountries }) {
 
 export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSidebar, currentYear }) {
   const scrollRef = useRef(null)
+  const isMobile = useIsMobile()
+  const yearCol = isMobile ? '44px' : YEAR_COL_WIDTH
+  const countryCol = isMobile ? '150px' : COUNTRY_COL_WIDTH
   const innerRef = useRef(null)
   const offsetsRef = useRef([])
   const [measureTick, setMeasureTick] = useState(0)
@@ -180,7 +184,14 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
   }
 
   return (
-    <div ref={scrollRef} style={{ overflow: 'auto', height: '100%', width: '100%', background: '#f8f3e7' }}>
+    <div ref={scrollRef} style={{
+      overflow: 'auto',
+      height: '100%',
+      width: '100%',
+      background: '#f8f3e7',
+      scrollSnapType: isMobile ? 'x proximity' : undefined,
+      scrollPaddingLeft: isMobile ? yearCol : undefined,
+    }}>
       <div ref={innerRef} style={{ position: 'relative', minWidth: 'fit-content' }}>
       <WatermarkLayer
         offsets={offsetsRef.current}
@@ -188,7 +199,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
       />
       <div style={{
         display: 'grid',
-        gridTemplateColumns: `${YEAR_COL_WIDTH} repeat(${selectedCountries.length}, ${COUNTRY_COL_WIDTH})`,
+        gridTemplateColumns: `${yearCol} repeat(${selectedCountries.length}, ${countryCol})`,
         gridAutoRows: `minmax(${ROW_HEIGHT}, auto)`,
       }}>
 
@@ -212,6 +223,7 @@ export default function TimelineGrid({ onYearChange, selectedCountries, onOpenSi
             height: HEADER_HEIGHT,
             background: '#f8f3e7',
             borderBottom: '1px solid #d8c9a8',
+            scrollSnapAlign: isMobile ? 'start' : undefined,
           }}>
             <CountryHeader country={country} year={currentYear} />
           </div>
