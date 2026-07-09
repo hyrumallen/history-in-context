@@ -121,7 +121,7 @@ function App() {
   } : {}
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+    <div className="app-shell" style={{ display: 'flex', flexDirection: 'column' }}>
       <header style={{
         background: '#1a1a2e',
         color: 'white',
