@@ -77,7 +77,7 @@ function headerButtonStyle(active, radius) {
 
 function App() {
   const [currentYear, setCurrentYear] = useState(1500)
-  const [view, setView] = useState('timeline')
+  const [view, setView] = useState('map')
   const [selectedIds, setSelectedIds] = useState(loadSelection)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const highlightElRef = useRef(null)
@@ -224,6 +224,7 @@ function App() {
                 playing={playing}
                 onYearChange={handleMapYear}
                 onTogglePlay={togglePlay}
+                onShowInTimeline={handlePinClick}
               />
             </div>
           )}
@@ -262,6 +263,7 @@ function App() {
                 playing={playing}
                 onYearChange={handleMapYear}
                 onTogglePlay={togglePlay}
+                onShowInTimeline={handlePinClick}
               />
             </div>
           </div>
