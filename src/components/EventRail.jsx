@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import events from '../data/events.json'
 import countries from '../data/countries.json'
+import rulers from '../data/rulers.json'
 import { TYPE_COLORS } from '../eventTypeColors'
 import { railItems } from '../mapPins'
+import { rulerAt } from '../rulers'
 import { showCard, scheduleHide } from '../hoverCardStore'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { SERIF } from '../constants'
@@ -16,6 +18,8 @@ function decadeLabel(year) {
 
 function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
   const color = TYPE_COLORS[event.type] ?? TYPE_COLORS.other
+  const country = COUNTRY_NAME[event.countryId] ?? event.countryId
+  const ruler = rulerAt(rulers, event.countryId, event.year)
   return (
     <li
       onMouseEnter={(e) => { onFocus?.(event.id); showCard(event, e.currentTarget.getBoundingClientRect(), false) }}
@@ -33,7 +37,7 @@ function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
       <span style={{ width: 8, height: 8, borderRadius: '50%', background: color, flexShrink: 0, alignSelf: 'center' }} />
       <span style={{ flex: 1 }}>
         <span style={{ fontFamily: SERIF }}>{event.title}</span>
-        <span style={{ display: 'block', fontSize: 11, color: '#8a7a5a' }}>{COUNTRY_NAME[event.countryId] ?? event.countryId}</span>
+        <span style={{ display: 'block', fontSize: 11, color: '#8a7a5a' }}>{ruler ? `${country} · ${ruler.name}` : country}</span>
       </span>
     </li>
   )
