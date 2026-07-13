@@ -13,7 +13,7 @@ function project(lng, lat) {
   return [(lng + 180) * (W / 360), (90 - lat) * (H / 180)]
 }
 
-export default function EventPinLayer({ currentYear, selectedIds, isMini }) {
+export default function EventPinLayer({ currentYear, selectedIds, isMini, focusedId, onFocus }) {
   const pins = isMini
     ? events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
     : pinsInWindow(events, currentYear, selectedIds)
@@ -30,7 +30,10 @@ export default function EventPinLayer({ currentYear, selectedIds, isMini }) {
     <g>
       {pins.map(event => {
         const [cx, cy] = project(event.lng, event.lat)
-        const { r, opacity } = isMini ? { r: 4, opacity: undefined } : pinEmphasis(event.year, currentYear)
+        const base = isMini ? { r: 4, opacity: undefined } : pinEmphasis(event.year, currentYear)
+        const focused = event.id === focusedId
+        const r = focused ? base.r + 2 : base.r
+        const opacity = focused ? 1 : base.opacity
         return (
           <circle
             key={event.id}
@@ -38,16 +41,17 @@ export default function EventPinLayer({ currentYear, selectedIds, isMini }) {
             cy={cy}
             r={r}
             fill={TYPE_COLORS[event.type] ?? TYPE_COLORS.other}
-            stroke="white"
-            strokeWidth={0.8}
+            stroke={focused ? '#1a1a2e' : 'white'}
+            strokeWidth={focused ? 1.6 : 0.8}
             opacity={opacity}
             style={{ cursor: 'pointer' }}
             onMouseEnter={(e) => {
               const target = e.currentTarget
+              onFocus?.(event.id)
               clearTimeout(timerRef.current)
               timerRef.current = setTimeout(() => openCard(event, target, false), HOVER_DELAY_MS)
             }}
-            onMouseLeave={() => { clearTimeout(timerRef.current); scheduleHide() }}
+            onMouseLeave={() => { onFocus?.(null); clearTimeout(timerRef.current); scheduleHide() }}
             onClick={(e) => openCard(event, e.currentTarget, true)}
           />
         )

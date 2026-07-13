@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { pinsInWindow, pinEmphasis } from './mapPins'
+import { pinsInWindow, pinEmphasis, railItems } from './mapPins'
 
 const ev = (id, year, countryId, lat = 1) => ({ id, year, countryId, lat, lng: 1 })
 const sel = new Set(['a', 'b'])
@@ -29,5 +29,19 @@ describe('pinEmphasis', () => {
     expect(near.r).toBeGreaterThan(far.r)
     expect(near.opacity).toBeGreaterThan(far.opacity)
     expect(far.opacity).toBeGreaterThanOrEqual(0.5)
+  })
+})
+
+describe('railItems', () => {
+  const events = [
+    ev('e3', 1508, 'a'), ev('e1', 1500, 'a'), ev('e2', 1500, 'b'), ev('e9', 1510, 'a'),
+  ]
+  it('returns decade-window events sorted by year then id, emphasis on the exact year', () => {
+    const rows = railItems(events, 1500, sel)
+    expect(rows.map(r => r.event.id)).toEqual(['e1', 'e2', 'e3'])
+    expect(rows.map(r => r.emphasis)).toEqual([true, true, false])
+  })
+  it('is empty when no events fall in the decade window', () => {
+    expect(railItems(events, 1520, sel)).toEqual([])
   })
 })
