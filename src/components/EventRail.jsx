@@ -7,7 +7,8 @@ import { railItems } from '../mapPins'
 import { rulerAt } from '../rulers'
 import { showCard, scheduleHide } from '../hoverCardStore'
 import { useIsMobile } from '../hooks/useIsMobile'
-import { SERIF } from '../constants'
+import { SERIF, START_YEAR, END_YEAR } from '../constants'
+import MapControls from './MapControls'
 
 const COUNTRY_NAME = Object.fromEntries(countries.map(c => [c.id, c.name]))
 
@@ -43,21 +44,25 @@ function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
   )
 }
 
-function MobileSheet({ list, rows, currentYear }) {
+// On mobile the sheet is anchored to the bottom: the event list grows upward
+// while the decade header and the timeline slider stay pinned at the bottom, so
+// the slider is always reachable and never covers the map.
+function MobileSheet({ list, rows, currentYear, onYearChange, playing, onTogglePlay }) {
   const [open, setOpen] = useState(false)
   return (
     <div style={{
       position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 45,
       background: 'rgba(253,249,239,0.97)', borderTop: '1px solid #d8c9a8',
-      display: 'flex', flexDirection: 'column',
-      maxHeight: open ? '45vh' : 40, transition: 'max-height 0.2s ease',
+      display: 'flex', flexDirection: 'column', maxHeight: '55vh',
       color: '#1a1a1a', fontSize: 12.5,
     }}>
+      {open && list}
       <button
         onClick={() => setOpen(o => !o)}
         style={{
           font: 'inherit', width: '100%', textAlign: 'left', cursor: 'pointer',
           padding: '10px 12px', background: 'none', border: 'none',
+          borderTop: open ? '1px solid #d8c9a8' : 'none', flexShrink: 0,
           fontFamily: SERIF, fontWeight: 700, fontSize: 13, color: '#4a3a22',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
           fontVariantNumeric: 'tabular-nums',
@@ -66,12 +71,20 @@ function MobileSheet({ list, rows, currentYear }) {
         <span>{decadeLabel(currentYear)} · {rows.length} {rows.length === 1 ? 'event' : 'events'}</span>
         <span>{open ? '▾' : '▴'}</span>
       </button>
-      {open && list}
+      <MapControls
+        inline
+        year={currentYear}
+        onYearChange={onYearChange}
+        playing={playing}
+        onTogglePlay={onTogglePlay}
+        min={START_YEAR}
+        max={END_YEAR}
+      />
     </div>
   )
 }
 
-export default function EventRail({ currentYear, selectedIds, focusedId, onFocus, onShowInTimeline }) {
+export default function EventRail({ currentYear, selectedIds, focusedId, onFocus, onShowInTimeline, onYearChange, playing, onTogglePlay }) {
   const isMobile = useIsMobile()
   const rows = railItems(events, currentYear, selectedIds)
 
@@ -86,7 +99,7 @@ export default function EventRail({ currentYear, selectedIds, focusedId, onFocus
   )
 
   const list = (
-    <ul style={{ margin: 0, padding: 0, overflowY: 'auto', flex: 1 }}>
+    <ul style={{ margin: 0, padding: 0, overflowY: 'auto', flex: 1, minHeight: 0 }}>
       {rows.length === 0 ? (
         <li style={{ listStyle: 'none', padding: '12px 10px', color: '#8a7a5a', fontStyle: 'italic' }}>
           No recorded events this decade.
@@ -105,7 +118,16 @@ export default function EventRail({ currentYear, selectedIds, focusedId, onFocus
   )
 
   if (isMobile) {
-    return <MobileSheet list={list} rows={rows} currentYear={currentYear} />
+    return (
+      <MobileSheet
+        list={list}
+        rows={rows}
+        currentYear={currentYear}
+        onYearChange={onYearChange}
+        playing={playing}
+        onTogglePlay={onTogglePlay}
+      />
+    )
   }
 
   return (
