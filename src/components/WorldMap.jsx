@@ -7,6 +7,7 @@ import { START_YEAR, END_YEAR } from '../constants'
 import Legend from './Legend'
 import MapControls from './MapControls'
 import EventRail from './EventRail'
+import { useIsMobile } from '../hooks/useIsMobile'
 
 const W = 800
 const H = 400
@@ -26,6 +27,7 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
   const { transform, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
   const isMini = mode === 'mini'
+  const isMobile = useIsMobile()
   const [focusedId, setFocusedId] = useState(null)
 
   const mapArea = (
@@ -88,7 +90,9 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
         </div>
       )}
 
-      {!isMini && (
+      {/* On mobile the slider lives in the event sheet (EventRail) so it can't
+          be covered by the sheet; desktop keeps the overlaid control bar. */}
+      {!isMini && !isMobile && (
         <MapControls
           year={currentYear}
           onYearChange={onYearChange}
@@ -111,6 +115,9 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
           focusedId={focusedId}
           onFocus={setFocusedId}
           onShowInTimeline={onShowInTimeline}
+          onYearChange={onYearChange}
+          playing={playing}
+          onTogglePlay={onTogglePlay}
         />
       )}
     </div>
