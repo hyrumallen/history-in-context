@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import events from '../data/events.json'
 import countries from '../data/countries.json'
 import { TYPE_COLORS } from '../eventTypeColors'
@@ -38,6 +39,34 @@ function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
   )
 }
 
+function MobileSheet({ list, rows, currentYear }) {
+  const [open, setOpen] = useState(false)
+  return (
+    <div style={{
+      position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 45,
+      background: 'rgba(253,249,239,0.97)', borderTop: '1px solid #d8c9a8',
+      display: 'flex', flexDirection: 'column',
+      maxHeight: open ? '45vh' : 40, transition: 'max-height 0.2s ease',
+      color: '#1a1a1a', fontSize: 12.5,
+    }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          font: 'inherit', width: '100%', textAlign: 'left', cursor: 'pointer',
+          padding: '10px 12px', background: 'none', border: 'none',
+          fontFamily: SERIF, fontWeight: 700, fontSize: 13, color: '#4a3a22',
+          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+          fontVariantNumeric: 'tabular-nums',
+        }}
+      >
+        <span>{decadeLabel(currentYear)} · {rows.length} {rows.length === 1 ? 'event' : 'events'}</span>
+        <span>{open ? '▾' : '▴'}</span>
+      </button>
+      {open && list}
+    </div>
+  )
+}
+
 export default function EventRail({ currentYear, selectedIds, focusedId, onFocus, onShowInTimeline }) {
   const isMobile = useIsMobile()
   const rows = railItems(events, currentYear, selectedIds)
@@ -71,8 +100,9 @@ export default function EventRail({ currentYear, selectedIds, focusedId, onFocus
     </ul>
   )
 
-  // Mobile bottom-sheet is added in Task 4; desktop docked panel for now.
-  if (isMobile) return null
+  if (isMobile) {
+    return <MobileSheet list={list} rows={rows} currentYear={currentYear} />
+  }
 
   return (
     <aside style={{
