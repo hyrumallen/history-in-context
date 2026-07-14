@@ -1,6 +1,6 @@
 import territories from '../data/territories.json'
 import countries from '../data/countries.json'
-import { project } from '../projection'
+import { pathFor } from '../territoryPaths'
 
 const SNAPSHOT_YEARS = territories.map(s => s.year)
 const colorMap = Object.fromEntries(countries.map(c => [c.id, c.mapColor]))
@@ -12,10 +12,6 @@ function nearestSnapshot(year) {
   )
 }
 
-function toPoints(coords, width, height) {
-  return coords.map(([lng, lat]) => project(lng, lat, width, height).join(',')).join(' ')
-}
-
 export default function TerritoryLayer({ currentYear, width, height, selectedIds }) {
   const snapshotYear = nearestSnapshot(currentYear)
   const snapshot = territories.find(s => s.year === snapshotYear)
@@ -25,19 +21,18 @@ export default function TerritoryLayer({ currentYear, width, height, selectedIds
     <g>
       {snapshot.territories
         .filter(territory => selectedIds.has(territory.countryId))
-        .map(territory =>
-        territory.polygons.map(polygon => (
-          <polygon
-            key={`${territory.countryId}-${polygon.name}`}
-            points={toPoints(polygon.coords, width, height)}
+        .map(territory => (
+          <path
+            key={territory.countryId}
+            d={pathFor(snapshotYear, territory.countryId, territory.geometry, width, height)}
+            fillRule="evenodd"
             fill={colorMap[territory.countryId] ?? '#ccc'}
             fillOpacity={0.75}
             stroke={strokeMap[territory.countryId] ?? '#999'}
             strokeWidth={0.5}
             strokeOpacity={0.9}
           />
-        ))
-      )}
+        ))}
     </g>
   )
 }
