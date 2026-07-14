@@ -68,17 +68,35 @@ describe('countries.json eras', () => {
 })
 
 describe('territories.json', () => {
-  it('snapshots have valid coords', () => {
+  it('snapshot years are sorted, unique, and in range', () => {
+    const years = territories.map(s => s.year)
+    expect(years).toEqual([...new Set(years)])
+    expect(years).toEqual([...years].sort((a, b) => a - b))
+    for (const year of years) {
+      expect(year).toBeGreaterThanOrEqual(START_YEAR)
+      expect(year).toBeLessThanOrEqual(END_YEAR)
+    }
+  })
+
+  it('every territory belongs to a known country', () => {
     for (const snap of territories) {
-      expect(snap.year).toBeGreaterThanOrEqual(START_YEAR)
-      expect(snap.year).toBeLessThanOrEqual(END_YEAR)
       for (const t of snap.territories) {
         expect(countryIds.has(t.countryId), `bad countryId ${t.countryId} in ${snap.year}`).toBe(true)
-        for (const p of t.polygons) {
-          expect(p.coords.length).toBeGreaterThanOrEqual(4)
-          for (const [lng, lat] of p.coords) {
-            expect(lng).toBeGreaterThanOrEqual(-180); expect(lng).toBeLessThanOrEqual(180)
-            expect(lat).toBeGreaterThanOrEqual(-90); expect(lat).toBeLessThanOrEqual(90)
+      }
+    }
+  })
+
+  it('every ring is closed and within lng/lat bounds', () => {
+    for (const snap of territories) {
+      for (const t of snap.territories) {
+        for (const polygon of t.geometry) {
+          for (const ring of polygon) {
+            expect(ring.length, `short ring in ${t.countryId} ${snap.year}`).toBeGreaterThanOrEqual(4)
+            expect(ring[0], `unclosed ring in ${t.countryId} ${snap.year}`).toEqual(ring[ring.length - 1])
+            for (const [lng, lat] of ring) {
+              expect(lng).toBeGreaterThanOrEqual(-180); expect(lng).toBeLessThanOrEqual(180)
+              expect(lat).toBeGreaterThanOrEqual(-90); expect(lat).toBeLessThanOrEqual(90)
+            }
           }
         }
       }
