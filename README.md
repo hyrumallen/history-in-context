@@ -29,8 +29,27 @@ React 19 + Vite, no backend. All historical data lives in JSON files under `src/
 - `countries.json` — the 22 countries with continent grouping, color palette, and successor-state eras
 - `rulers.json` — ruler reigns from monarchs to presidents (shown as shaded bands in each column)
 - `events.json` — 500+ dated events with coordinates, descriptions, and links
-- `territories.json` — territorial border polygons at 18 time snapshots (1500–2000)
+- `territories.json` — territorial borders (GeoJSON MultiPolygon coordinates) at 19 time snapshots (1500–2000)
 
 All 22 countries are populated across the full 1500–2000 range, evolving through their successor states (Holy Roman Empire → Germany, Aztec Empire → Mexico, Songhai → Mali). Colonial and stateless periods show events under an era label with no ruler — history keeps happening even when the state is gone.
 
 Design specs and implementation plans are under `docs/superpowers/`.
+
+## Data & license
+
+Historical border geometry in `src/data/territories.json` is derived from
+[aourednik/historical-basemaps](https://github.com/aourednik/historical-basemaps),
+licensed GPL-3.0. Because that data is included here, this project is likewise
+licensed under the [GPL-3.0](LICENSE).
+
+Coastlines in `src/data/world-outline.json` are from Natural Earth (public domain).
+
+Regenerate the territory data with:
+
+```bash
+npm run fetch:basemaps      # downloads source GeoJSON into .cache/ (gitignored)
+npm run build:territories   # writes src/data/territories.json
+```
+
+Which source features belong to which country in which snapshot year is defined
+in `scripts/territory-map.json`.

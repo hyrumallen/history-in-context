@@ -8,7 +8,9 @@
     "build": "vite build",
     "lint": "oxlint",
     "test": "vitest run",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "fetch:basemaps": "node scripts/fetch-basemaps.cjs",
+    "build:territories": "node scripts/build-territories.cjs"
   },
   "dependencies": {
     "react": "^19.2.7",
@@ -19,6 +21,7 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "oxlint": "^1.69.0",
+    "polygon-clipping": "^0.15.7",
     "vite": "^8.1.0",
     "vitest": "^4.1.10"
   }

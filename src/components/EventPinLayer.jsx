@@ -3,17 +3,14 @@ import events from '../data/events.json'
 import { TYPE_COLORS } from '../eventTypeColors'
 import { pinsInWindow, pinEmphasis } from '../mapPins'
 import { showCard, scheduleHide } from '../hoverCardStore'
+import { project } from '../projection'
 
 const W = 800
 const H = 400
 
 const HOVER_DELAY_MS = 400
 
-function project(lng, lat) {
-  return [(lng + 180) * (W / 360), (90 - lat) * (H / 180)]
-}
-
-export default function EventPinLayer({ currentYear, selectedIds, isMini, focusedId, onFocus }) {
+export default function EventPinLayer({ currentYear, selectedIds, isMini, focusedId, selectedId, onFocus }) {
   const pins = isMini
     ? events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
     : pinsInWindow(events, currentYear, selectedIds)
@@ -29,9 +26,9 @@ export default function EventPinLayer({ currentYear, selectedIds, isMini, focuse
   return (
     <g>
       {pins.map(event => {
-        const [cx, cy] = project(event.lng, event.lat)
+        const [cx, cy] = project(event.lng, event.lat, W, H)
         const base = isMini ? { r: 4, opacity: undefined } : pinEmphasis(event.year, currentYear)
-        const focused = event.id === focusedId
+        const focused = event.id === focusedId || event.id === selectedId
         const r = focused ? base.r + 2 : base.r
         const opacity = focused ? 1 : base.opacity
         return (
