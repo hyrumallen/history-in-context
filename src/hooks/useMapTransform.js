@@ -1,4 +1,5 @@
 import { useState, useCallback, useRef } from 'react'
+import { project } from '../projection'
 
 const MIN_SCALE = 1
 const MAX_SCALE = 12
@@ -15,6 +16,18 @@ function clampT(t) {
     translateX: Math.min(maxX, Math.max(minX, t.translateX)),
     translateY: Math.min(maxY, Math.max(minY, t.translateY)),
   }
+}
+
+// Centers (lng, lat) in the viewport at the current scale. clampT zeroes the
+// translation at scale <= 1, so this is intentionally a no-op when un-zoomed:
+// the whole world is already visible and there is nothing to center.
+export function centerTransform(prev, lng, lat, width, height) {
+  const [x, y] = project(lng, lat, width, height)
+  return clampT({
+    scale: prev.scale,
+    translateX: width / 2 - prev.scale * x,
+    translateY: height / 2 - prev.scale * y,
+  })
 }
 
 export default function useMapTransform() {
@@ -75,8 +88,13 @@ export default function useMapTransform() {
     apply({ scale: 1, translateX: 0, translateY: 0 })
   }, [apply])
 
+  const centerOn = useCallback((lng, lat) => {
+    apply(centerTransform(transformRef.current, lng, lat, 800, 400))
+  }, [apply])
+
   return {
     transform,
+    centerOn,
     handlers: { onWheel, onMouseDown, onMouseMove, onMouseUp, onMouseLeave, onDoubleClick },
   }
 }

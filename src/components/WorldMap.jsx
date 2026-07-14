@@ -25,7 +25,7 @@ function featureRings(feature) {
 }
 
 export default function WorldMap({ currentYear, mode = 'mini', selectedIds, playing, onYearChange, onTogglePlay }) {
-  const { transform, handlers } = useMapTransform()
+  const { transform, centerOn, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
   const isMini = mode === 'mini'
   const isMobile = useIsMobile()
@@ -38,6 +38,7 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
   const handleSelectEvent = (event) => {
     setSelectedId(event.id)
     onYearChange?.(event.year)
+    if (event.lat != null && event.lng != null) centerOn(event.lng, event.lat)
   }
 
   const handleUserYearChange = (year) => {
