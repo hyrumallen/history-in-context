@@ -224,7 +224,6 @@ function App() {
                 playing={playing}
                 onYearChange={handleMapYear}
                 onTogglePlay={togglePlay}
-                onShowInTimeline={handlePinClick}
               />
             </div>
           )}
@@ -263,7 +262,6 @@ function App() {
                 playing={playing}
                 onYearChange={handleMapYear}
                 onTogglePlay={togglePlay}
-                onShowInTimeline={handlePinClick}
               />
             </div>
           </div>

@@ -24,12 +24,31 @@ function featureRings(feature) {
   return []
 }
 
-export default function WorldMap({ currentYear, mode = 'mini', selectedIds, playing, onYearChange, onTogglePlay, onShowInTimeline }) {
+export default function WorldMap({ currentYear, mode = 'mini', selectedIds, playing, onYearChange, onTogglePlay }) {
   const { transform, handlers } = useMapTransform()
   const { scale, translateX, translateY } = transform
   const isMini = mode === 'mini'
   const isMobile = useIsMobile()
   const [focusedId, setFocusedId] = useState(null)
+  const [selectedId, setSelectedId] = useState(null)
+
+  // The selection has to survive the year change the click itself causes, so it
+  // is cleared from the user's own year controls rather than from a currentYear
+  // effect — such an effect would make every click clear its own selection.
+  const handleSelectEvent = (event) => {
+    setSelectedId(event.id)
+    onYearChange?.(event.year)
+  }
+
+  const handleUserYearChange = (year) => {
+    setSelectedId(null)
+    onYearChange?.(year)
+  }
+
+  const handleTogglePlay = () => {
+    setSelectedId(null)
+    onTogglePlay?.()
+  }
 
   const mapArea = (
     <div style={{ flex: 1, minWidth: 0, height: '100%', overflow: 'hidden', position: 'relative', background: '#b8d4e8' }}>
@@ -58,6 +77,7 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
             selectedIds={selectedIds}
             isMini={isMini}
             focusedId={focusedId}
+            selectedId={selectedId}
             onFocus={setFocusedId}
           />
         </g>
@@ -96,9 +116,9 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
       {!isMini && !isMobile && (
         <MapControls
           year={currentYear}
-          onYearChange={onYearChange}
+          onYearChange={handleUserYearChange}
           playing={playing}
-          onTogglePlay={onTogglePlay}
+          onTogglePlay={handleTogglePlay}
           min={START_YEAR}
           max={END_YEAR}
         />
@@ -114,11 +134,12 @@ export default function WorldMap({ currentYear, mode = 'mini', selectedIds, play
           currentYear={currentYear}
           selectedIds={selectedIds}
           focusedId={focusedId}
+          selectedId={selectedId}
           onFocus={setFocusedId}
-          onShowInTimeline={onShowInTimeline}
-          onYearChange={onYearChange}
+          onSelect={handleSelectEvent}
+          onYearChange={handleUserYearChange}
           playing={playing}
-          onTogglePlay={onTogglePlay}
+          onTogglePlay={handleTogglePlay}
         />
       )}
     </div>

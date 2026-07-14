@@ -17,7 +17,7 @@ function decadeLabel(year) {
   return `${start}–${start + 9}`
 }
 
-function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
+function RailRow({ event, emphasis, focused, onFocus, onSelect }) {
   const color = TYPE_COLORS[event.type] ?? TYPE_COLORS.other
   const country = COUNTRY_NAME[event.countryId] ?? event.countryId
   const ruler = rulerAt(rulers, event.countryId, event.year)
@@ -25,7 +25,7 @@ function RailRow({ event, emphasis, focused, onFocus, onShowInTimeline }) {
     <li
       onMouseEnter={(e) => { onFocus?.(event.id); showCard(event, e.currentTarget.getBoundingClientRect(), false) }}
       onMouseLeave={() => { onFocus?.(null); scheduleHide() }}
-      onClick={() => onShowInTimeline?.(event.id)}
+      onClick={() => onSelect?.(event)}
       style={{
         display: 'flex', alignItems: 'baseline', gap: 8, padding: '5px 10px',
         cursor: 'pointer', listStyle: 'none',
@@ -84,7 +84,7 @@ function MobileSheet({ list, rows, currentYear, onYearChange, playing, onToggleP
   )
 }
 
-export default function EventRail({ currentYear, selectedIds, focusedId, onFocus, onShowInTimeline, onYearChange, playing, onTogglePlay }) {
+export default function EventRail({ currentYear, selectedIds, focusedId, selectedId, onFocus, onSelect, onYearChange, playing, onTogglePlay }) {
   const isMobile = useIsMobile()
   const rows = railItems(events, currentYear, selectedIds)
 
@@ -109,9 +109,9 @@ export default function EventRail({ currentYear, selectedIds, focusedId, onFocus
           key={event.id}
           event={event}
           emphasis={emphasis}
-          focused={event.id === focusedId}
+          focused={event.id === focusedId || event.id === selectedId}
           onFocus={onFocus}
-          onShowInTimeline={onShowInTimeline}
+          onSelect={onSelect}
         />
       ))}
     </ul>

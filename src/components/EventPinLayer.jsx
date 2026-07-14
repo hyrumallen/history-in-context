@@ -10,7 +10,7 @@ const H = 400
 
 const HOVER_DELAY_MS = 400
 
-export default function EventPinLayer({ currentYear, selectedIds, isMini, focusedId, onFocus }) {
+export default function EventPinLayer({ currentYear, selectedIds, isMini, focusedId, selectedId, onFocus }) {
   const pins = isMini
     ? events.filter(e => e.year === currentYear && e.lat != null && selectedIds.has(e.countryId))
     : pinsInWindow(events, currentYear, selectedIds)
@@ -28,7 +28,7 @@ export default function EventPinLayer({ currentYear, selectedIds, isMini, focuse
       {pins.map(event => {
         const [cx, cy] = project(event.lng, event.lat, W, H)
         const base = isMini ? { r: 4, opacity: undefined } : pinEmphasis(event.year, currentYear)
-        const focused = event.id === focusedId
+        const focused = event.id === focusedId || event.id === selectedId
         const r = focused ? base.r + 2 : base.r
         const opacity = focused ? 1 : base.opacity
         return (
