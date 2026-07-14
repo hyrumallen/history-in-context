@@ -1,5 +1,6 @@
 import territories from '../data/territories.json'
 import countries from '../data/countries.json'
+import { project } from '../projection'
 
 const SNAPSHOT_YEARS = territories.map(s => s.year)
 const colorMap = Object.fromEntries(countries.map(c => [c.id, c.mapColor]))
@@ -12,12 +13,7 @@ function nearestSnapshot(year) {
 }
 
 function toPoints(coords, width, height) {
-  return coords
-    .map(([lng, lat]) => [
-      (lng + 180) * (width / 360),
-      (90 - lat) * (height / 180),
-    ].join(','))
-    .join(' ')
+  return coords.map(([lng, lat]) => project(lng, lat, width, height).join(',')).join(' ')
 }
 
 export default function TerritoryLayer({ currentYear, width, height, selectedIds }) {

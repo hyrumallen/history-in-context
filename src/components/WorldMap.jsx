@@ -8,12 +8,13 @@ import Legend from './Legend'
 import MapControls from './MapControls'
 import EventRail from './EventRail'
 import { useIsMobile } from '../hooks/useIsMobile'
+import { project as projectPoint } from '../projection'
 
 const W = 800
 const H = 400
 
 function project([lng, lat]) {
-  return `${(lng + 180) * (W / 360)},${(90 - lat) * (H / 180)}`
+  return projectPoint(lng, lat, W, H).join(',')
 }
 
 function featureRings(feature) {
