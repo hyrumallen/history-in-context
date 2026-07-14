@@ -4,6 +4,7 @@
 // Source: https://github.com/aourednik/historical-basemaps (GPL-3.0)
 const fs = require('fs')
 const path = require('path')
+const zlib = require('zlib')
 const polygonClipping = require('polygon-clipping')
 const { SNAPSHOT_YEARS } = require('./territory-years.cjs')
 
@@ -11,8 +12,18 @@ const CACHE = path.join(__dirname, '..', '.cache', 'basemaps')
 const OUT = path.join(__dirname, '..', 'src', 'data', 'territories.json')
 const MAP = require('./territory-map.json')
 
-const TOLERANCE = 0.2 // degrees; Douglas-Peucker. Raise if the output is too big.
-const PRECISION = 2    // decimal places ~ 1km
+const TOLERANCE = 0.4   // degrees; Douglas-Peucker. Raise if the output is too big.
+const PRECISION = 2     // decimal places ~ 1km
+// Minimum ring area in square degrees. Colonial empires drag in thousands of
+// islets (Indonesia, the Philippines, the Caribbean) that cost a 4-point ring
+// each — ring count, not vertex count, dominates the file size once every
+// country is in. One pixel of the 800x400 map spans 0.45 deg, so 0.05 deg² is
+// well under a pixel at world zoom. Japan keeps its four main islands; raising
+// this much further starts eating real islands when the user zooms in.
+const MIN_RING_AREA = 0.05
+// The budget that matters is gzip, not raw bytes: the file ships compressed and
+// JSON coordinates compress about 4x.
+const GZIP_BUDGET_KB = 250
 
 // --- geometry helpers -------------------------------------------------------
 
@@ -58,6 +69,15 @@ function roundRing(ring) {
   return dedup
 }
 
+// Shoelace formula. Sign indicates winding, so callers take the absolute value.
+function ringArea(ring) {
+  let sum = 0
+  for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+    sum += (ring[j][0] * ring[i][1]) - (ring[i][0] * ring[j][1])
+  }
+  return Math.abs(sum / 2)
+}
+
 function toMultiPolygon(geometry) {
   if (!geometry) return []
   if (geometry.type === 'Polygon') return [geometry.coordinates]
@@ -67,9 +87,23 @@ function toMultiPolygon(geometry) {
 
 // --- build ------------------------------------------------------------------
 
-function featureMatches(feature, names) {
+// A year's value is either a list of NAME/SUBJECTO strings, or an object
+// { match: [...], exclude: [...] }. `exclude` drops features by NAME after
+// matching — needed where the source mis-tags a feature's ruler (e.g. it gives
+// "Kingdom of Brazil" SUBJECTO=Portugal in 1900, long after independence, which
+// would otherwise make Portugal and Brazil both draw it).
+function rulesFor(byYear, year) {
+  const value = byYear[String(year)]
+  if (!value) return null
+  return Array.isArray(value)
+    ? { match: value, exclude: [] }
+    : { match: value.match, exclude: value.exclude ?? [] }
+}
+
+function featureMatches(feature, rules) {
   const { NAME, SUBJECTO } = feature.properties
-  return names.includes(NAME) || names.includes(SUBJECTO)
+  if (rules.exclude.includes(NAME)) return false
+  return rules.match.includes(NAME) || rules.match.includes(SUBJECTO)
 }
 
 function buildYear(year) {
@@ -79,11 +113,12 @@ function buildYear(year) {
 
   const territories = []
   for (const [countryId, byYear] of Object.entries(MAP)) {
-    const names = byYear[String(year)]
-    if (!names) continue // absent this snapshot, by design
+    const rules = rulesFor(byYear, year)
+    if (!rules) continue // absent this snapshot, by design
+    const names = rules.match
 
     const parts = world.features
-      .filter(f => featureMatches(f, names))
+      .filter(f => featureMatches(f, rules))
       .flatMap(f => toMultiPolygon(f.geometry))
     if (parts.length === 0) {
       console.warn(`  !! ${countryId} ${year}: no source feature matched ${JSON.stringify(names)}`)
@@ -95,7 +130,11 @@ function buildYear(year) {
     const unioned = polygonClipping.union(...parts.map(p => [p]))
 
     const geometry = unioned
+      // Drop islets before simplifying: a polygon whose outer ring is too small
+      // to see goes entirely, along with any hole too small to see.
+      .filter(polygon => ringArea(polygon[0]) >= MIN_RING_AREA)
       .map(polygon => polygon
+        .filter((ring, i) => i === 0 || ringArea(ring) >= MIN_RING_AREA)
         .map(ring => roundRing(simplifyRing(ring, TOLERANCE)))
         .filter(ring => ring.length >= 4))
       .filter(polygon => polygon.length > 0)
@@ -112,10 +151,14 @@ function main() {
     console.log(`${year}: ${snapshot.territories.map(t => t.countryId).join(', ')}`)
     return snapshot
   })
-  fs.writeFileSync(OUT, JSON.stringify(snapshots))
-  const kb = (fs.statSync(OUT).size / 1024).toFixed(0)
-  console.log(`\nwrote ${OUT} (${kb} KB)`)
-  if (kb > 500) console.warn('!! over the 500 KB budget — raise TOLERANCE and rebuild')
+  const json = JSON.stringify(snapshots)
+  fs.writeFileSync(OUT, json)
+  const rawKb = (Buffer.byteLength(json) / 1024).toFixed(0)
+  const gzipKb = (zlib.gzipSync(json).length / 1024).toFixed(0)
+  console.log(`\nwrote ${OUT} (${rawKb} KB raw, ${gzipKb} KB gzip)`)
+  if (gzipKb > GZIP_BUDGET_KB) {
+    console.warn(`!! over the ${GZIP_BUDGET_KB} KB gzip budget — raise TOLERANCE or MIN_RING_AREA and rebuild`)
+  }
 }
 
 main()
